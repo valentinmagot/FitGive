@@ -8,7 +8,10 @@
 | TA 1      | [Wassim El Ahmar](welah096@uottawa.ca)                                                         |
 | Team      | Ellen Li 300015724 <br />  Hervé Egla 8371683 <br /> ValentinMagot 8843488                     |
 
-* [Project Proposal](https://github.com/valentinmagot/FitGive/wiki/Project-Proposal)
+# Wiki
+
+This project wiki contains a collection of documentation pertinent for the project.
+[Wiki](https://github.com/valentinmagot/FitGive/wiki)
 
 
 # Getting Started with Create React App

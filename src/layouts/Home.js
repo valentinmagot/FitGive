@@ -7,7 +7,7 @@ import Button from "components/CustomButtons/Button.js";
 export default function Home() {
   return (
     <div>
-      <Link to='/admin/dashboard' >
+      <Link to='/app/dashboard' >
         <Button>Log In</Button>
       </Link>
     </div>

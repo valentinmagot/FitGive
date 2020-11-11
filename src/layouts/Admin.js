@@ -22,7 +22,7 @@ let ps;
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/app") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -33,7 +33,7 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/admin" to="/admin/dashboard" />
+    <Redirect from="/app" to="/app/dashboard" />
   </Switch>
 );
 
@@ -62,7 +62,7 @@ export default function Admin({ ...rest }) {
     setMobileOpen(!mobileOpen);
   };
   const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
+    return window.location.pathname !== "/app/maps";
   };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {

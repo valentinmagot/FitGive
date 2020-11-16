@@ -20,22 +20,13 @@ beforeEach(() => {
 
 
 describe("Friends page testing", () => {
-  
-
-  test('Page first card title should render', () => {
-    expect(wrapper.find('#first-card-title').text()).toContain('Grow your commnunity')
-  });
-
-  test('Page first card sub-title should render', () => {
-    expect(wrapper.find('#first-card-subtitle').text()).toContain('It is much easier to stick to a challenge with friends by your side.')
-  });
 
 
   test(" 'Add friends' card should render", () => {
     expect(wrapper.containsMatchingElement( 
       <CardFriends
-        header="Add friends"
-        label="#342564"
+        header="Add Friends"
+        label="Code"
         placeholder=''
         buttonText="Add"
         isReadOnly={false}
@@ -46,7 +37,7 @@ describe("Friends page testing", () => {
   test(" 'Share your code' card should render", () => {
     expect(wrapper.containsMatchingElement( 
       <CardFriends
-        header="Share your code"
+        header="Share Your Code"
         label="Your code"
         placeholder='#647568'
         buttonText="Copy"
@@ -58,11 +49,7 @@ describe("Friends page testing", () => {
   });
 
   test('Page second card title should render', () => {
-    expect(wrapper.find('#second-card-title').text()).toContain('Friends list')
-  });
-
-  test('Page second card sub-title should render', () => {
-    expect(wrapper.find('#second-card-subtitle').text()).toContain('Here is collection of your contacts.')
+    expect(wrapper.find('#second-card-title').text()).toContain('Friends List')
   });
 
   test('Friend list component should render', () => {

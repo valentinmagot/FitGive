@@ -55,6 +55,25 @@ const styles = {
     borderBottomLeftRadius: "0px",
   }
 };
+const dummyData = [
+  {
+    id: 0,
+    username: 'Valentin',
+    profilePicture: '',
+    quickStats: 'Completed 5 challenges in the past month.'
+  }, {
+    id: 1,
+    username: 'Ellen',
+    profilePicture: '',
+    quickStats: 'Completed 2 challenges in the past month.'
+  }, {
+    id: 2,
+    username: 'Herve',
+    profilePicture: '',
+    quickStats: 'Completed 1 challenges in the past month.'
+  }
+];
+
 
 const useStyles = makeStyles(styles);
 
@@ -62,52 +81,45 @@ export default function Friends() {
   const classes = useStyles();
   return (
     <GridContainer>
-    <GridItem xs={12} sm={12} md={12}>
-      <Card>
-        <CardHeader color="primary">
-          <h4 id='first-card-title' className={classes.cardTitleWhite}>Grow your commnunity</h4>
-          <p id='first-card-subtitle' className={classes.cardCategoryWhite}> It is much easier to stick to a challenge with friends by your side.</p>
-        </CardHeader>
+      <GridItem xs={12} sm={12} md={12}>
         <CardBody>
-        <GridContainer>
+          <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
               <CardFriends
-                header="Add friends"
-                label="#342564"
+                header="Add Friends"
+                label="Code"
                 placeholder=''
                 buttonText="Add"
                 isReadOnly={false}
-              />          
+              />
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <CardFriends
-                header="Share your code"
+                header="Share Your Code"
                 label="Your code"
                 placeholder='#647568'
                 buttonText="Copy"
                 isReadOnly={true}
                 inputId='outlined-code-2'
 
-              />   
+              />
             </GridItem>
           </GridContainer>
         </CardBody>
-      </Card>
       </GridItem>
-      <GridItem xs={12} sm={12} md={12}> 
-      <Card>
-        <CardHeader color="primary">
-          <h4 id='second-card-title' className={classes.cardTitleWhite}>Friends list</h4>
-          <p id='second-card-subtitle' className={classes.cardCategoryWhite}>Here is collection of your contacts.</p>
-        </CardHeader>
-        <CardBody>
-        <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <ListFriendsList />
-            </GridItem>
-          </GridContainer>
-        </CardBody>
-      </Card>
+      <GridItem xs={12} sm={12} md={12}>
+        <Card>
+          <CardHeader color="primary">
+            <h4 id='second-card-title' className={classes.cardTitleWhite}>Friends List</h4>
+          </CardHeader>
+          <CardBody>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <ListFriendsList data={dummyData} />
+              </GridItem>
+            </GridContainer>
+          </CardBody>
+        </Card>
       </GridItem>
     </GridContainer>
   );

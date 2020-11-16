@@ -4,13 +4,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,19 +27,11 @@ export default function AlignItemsList(props) {
         {data.map((item, index) =>
         <div key={index} >
          <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-            <Avatar variant="square" alt={item.username} src={item.profilePicture} />
-            </ListItemAvatar>
             <ListItemText id='labelId'
-            primary={item.username}
+            primary={item.challengeName}
             secondary={item.quickStats}
             />
-              <ListItemSecondaryAction style={{right: '0px'}}>
-                <FormControlLabel
-                 control={<Checkbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} name="checked" />}
-                 labelPlacement="end"
-            />
-            </ListItemSecondaryAction>
+              <h4>Won</h4>
          </ListItem>
         <Divider variant="inset" component="li" />
         </div>

@@ -6,6 +6,7 @@ import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
+import SupervisorAccount from "@material-ui/icons/SupervisorAccount";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
@@ -15,6 +16,7 @@ import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
+import Friends from "views/Friends/Friends.js";
 
 const dashboardRoutes = [
   {
@@ -64,6 +66,13 @@ const dashboardRoutes = [
     name: "Notifications",
     icon: Notifications,
     component: NotificationsPage,
+    layout: "/app"
+  },
+  {
+    path: "/friends",
+    name: "Friends",
+    icon: SupervisorAccount,
+    component: Friends,
     layout: "/app"
   },
   {

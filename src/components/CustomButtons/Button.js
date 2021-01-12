@@ -49,6 +49,7 @@ export default function RegularButton(props) {
 
 RegularButton.propTypes = {
   color: PropTypes.oneOf([
+    "main",
     "primary",
     "info",
     "success",

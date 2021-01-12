@@ -113,12 +113,12 @@ export default function Admin({ ...rest }) {
           )
         }
         {getRoute() ? <Footer /> : null}
-        <FixedPlugin
+        {/* <FixedPlugin
           handleColorClick={handleColorClick}
           bgColor={color}
           handleFixedClick={handleFixedClick}
           fixedClasses={fixedClasses}
-        />
+        /> */}
       </div>
     </div>
   );

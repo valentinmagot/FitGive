@@ -27,7 +27,7 @@ const cardStyle = {
   },
   cardProfile: {
     marginTop: "30px",
-    textAlign: "center"
+    textAlign: "left"
   },
   cardChart: {
     "& p": {

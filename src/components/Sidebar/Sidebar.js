@@ -75,10 +75,7 @@ export default function Sidebar(props) {
   );
   var brand = (
     <div className={classes.logo}>
-      <Link to='/' style={{display: "inline-flex"}}>
-        <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
-        </div>
+      <Link to='/' style={{display: "inline-flex", paddingLeft: '1em'}}>
         <div className={classes.logoLink}>
           {logoText}
         </div>

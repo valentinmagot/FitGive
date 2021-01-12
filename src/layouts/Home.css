@@ -1,0 +1,40 @@
+body {
+    overflow: hidden;
+
+}
+.fullView {
+    padding: 1em;
+    background: linear-gradient(to right bottom, #5e86c7 60%, #dde3ec 40%);    
+    height: 100vh;
+    margin: 0;
+}
+#hero-img {
+    height: 35em;
+}
+.hero-text {
+    color: white;
+}
+.hero {
+    margin: auto; 
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+}
+.h1{
+    font-weight: 800;
+    font-size: 5em;
+    margin-bottom: 0.2em;
+}
+.sign {
+    padding: 2em;
+    background-color: transparent !important;
+}
+.nav {
+    float: right;
+    display: flex;
+    text-transform: uppercase;
+    font-weight: 500;
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from 'react';
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,15 +17,20 @@ import Notifications from "@material-ui/icons/Notifications";
 import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import {useAuth} from '../../context/authContext'
 
 
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
   const classes = useStyles();
+  const { logout } = useAuth();
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  const history = useHistory()
   const handleClickNotification = event => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -43,11 +48,29 @@ export default function AdminNavbarLinks() {
       setOpenProfile(event.currentTarget);
     }
   };
-  const handleCloseProfile = () => {
+
+  async function handleLogout(e) {
+    e.preventDefault()
+      try {
+        setError('')
+        setLoading(true)
+        await logout()
+        setLoading(false)
+        handleCloseProfile() 
+        history.push("/")     
+      } catch {
+        setError('Failed to create an account')
+        setLoading(false)
+      }
+  }
+
+  const handleCloseProfile = async () => {
     setOpenProfile(null);
   };
+  
   return (
     <div>
+      {error && <Alert severity="error">{error}</Alert>}
       <div className={classes.manager}>
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
@@ -153,14 +176,12 @@ export default function AdminNavbarLinks() {
                       Settings
                     </MenuItem>
                     <Divider light />
-                    <Link to='/' >
                       <MenuItem
-                        onClick={handleCloseProfile}
+                        onClick={handleLogout}
                         className={classes.dropdownItem}
                       >
                         Logout
                     </MenuItem>
-                    </Link>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

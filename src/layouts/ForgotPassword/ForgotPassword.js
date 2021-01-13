@@ -62,12 +62,12 @@ function Copyright() {
   );
 }
 
-export default function Signin() {
+export default function ForgotPassword() {
   const classes = useStyles();
   const emailRef = useRef()
-  const passwordRef = useRef()
-  const { signin } = useAuth()
+  const { resetPassword } = useAuth()
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const history = useHistory()
   
@@ -75,15 +75,17 @@ export default function Signin() {
     e.preventDefault()
 
       try {
+        setMessage('')
         setError('')
         setLoading(true)
-        await signin(emailRef.current.value, passwordRef.current.value)
-        setLoading(false) 
-        history.push("/app/dashboard")
-      } catch {
-        setError('Failed to sign in.')
+        await resetPassword(emailRef.current.value)
+        setMessage('Check your inbox for further instructions')
         setLoading(false)
+        // history.push("/update-password")
+      } catch {
+        setError('Failed reset password.')
       }
+      
   }
 
   return (
@@ -94,8 +96,9 @@ export default function Signin() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Reset Password
         </Typography>
+        {message && <Alert severity="success">{message}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
@@ -110,37 +113,25 @@ export default function Signin() {
             autoFocus
             inputRef={emailRef}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            inputRef={passwordRef}
-          />
           <Button
             type="submit"
             fullWidth
             color="primary"
             disabled={loading}
           >
-            Sign In
+            Reset Password
           </Button>
           <Grid container>
             <Grid item xs>
-            <Link id='forgotPasswordLink' to='/forgot-password'>
-              <p id='forgortPassLink' className={classes.links}  variant="body2">
-                Forgot password?
+            <Link id='signInLink' to='/signin' >
+              <p id='signIn' className={classes.links} >
+                Sign In
               </p>
-            </Link>
+              </Link>
             </Grid>
             <Grid item>
               <Link id='signUpLink' to='/signup'>
-                <p id='createAccountLink' className={classes.links} variant="body2" >{"Don't have an account? Sign Up"}</p>
+                <p id='signUp' className={classes.links} variant="body2" >{"Sign Up"}</p>
               </Link>
             </Grid>
           </Grid>

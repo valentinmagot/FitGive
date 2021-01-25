@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from "components/CustomButtons/Button.js";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import { Link } from "react-router-dom";
-import Links from '@material-ui/core/Link';
+import Alert from '@material-ui/lab/Alert';
+import { Link, useHistory } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import {useAuth} from '../../context/authContext'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,10 +33,19 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   links:{
+    cursor: 'pointer',
+    color: '#3f51b5',
     "&:hover": {
       color: '#3f51b5',
     }
   },
+  copyright:{
+    cursor: 'pointer',
+    color: 'rgba(0, 0, 0, 0.54)',
+    "&:hover": {
+      color: 'rgba(0, 0, 0, 0.54)',
+    }
+  }
 }));
 
 function Copyright() {
@@ -42,9 +53,9 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Links className={classes.links} color="inherit" href="https://github.com/valentinmagot/FitGive">
+      <a className={classes.copyright} color="inherit" href="https://github.com/valentinmagot/FitGive">
         Fit Give
-      </Links>{' '}
+      </a>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -53,6 +64,36 @@ function Copyright() {
 
 export default function SignUp() {
   const classes = useStyles();
+  const firstnameRef = useRef()
+  const lastnameRef = useRef()
+  const emailRef = useRef()
+  const passwordRef = useRef()
+  const passwordConfirmRef = useRef()
+  const { signup } = useAuth()
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const history = useHistory()
+  
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+
+    if(passwordRef.current.value !== 
+      passwordConfirmRef.current.value){
+        return setError('Passwords do not match')
+      }
+
+      try {
+        setError('')
+        setLoading(true)
+        await signup(firstnameRef.current.value, lastnameRef.current.value, emailRef.current.value, passwordRef.current.value)
+        setLoading(false) 
+        history.push("/app/dashboard")     
+      } catch {
+        setError('Failed to create an account')
+        setLoading(false)
+      }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -64,7 +105,8 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        {error && <Alert severity="error">{error}</Alert>}
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -76,6 +118,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                inputRef={firstnameRef}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -87,6 +130,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                inputRef={lastnameRef}
               />
             </Grid>
             <Grid item xs={12}>
@@ -98,6 +142,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                inputRef={emailRef}
               />
             </Grid>
             <Grid item xs={12}>
@@ -110,6 +155,20 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputRef={passwordRef}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password confirm"
+                label="Confirm Password"
+                type="password"
+                id="password-confirm"
+                autoComplete="current-password"
+                inputRef={passwordConfirmRef}
               />
             </Grid>
           </Grid>
@@ -117,15 +176,16 @@ export default function SignUp() {
             type="submit"
             fullWidth
             color="primary"
+            disabled={loading}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
             <Link id='signInLink' to='/signin' >
-              <Links id='alreadyOwnAccountLink' className={classes.links} href="#" variant="body2">
+              <p id='alreadyOwnAccountLink' className={classes.links} >
                 Already have an account? Sign in
-              </Links>
+              </p>
               </Link>
             </Grid>
           </Grid>

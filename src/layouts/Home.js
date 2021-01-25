@@ -11,7 +11,7 @@ export default function Home() {
     <div className="fullView">
       <div className="nav">
         <Link to='/signin' >
-          <div className="sign">Sing in</div>
+          <div className="sign">Sign in</div>
         </Link>
         <Link to='/Signup' >
           <div className="sign">Sign Up</div>

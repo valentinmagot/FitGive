@@ -4,6 +4,10 @@
   "description": "FitGive. Capstone SEG 2910 Fall 2020",
   "private": true,
   "main": "dist/index.js",
+  "engines": {
+    "node": "10.x",
+    "npm": "6.x"
+  },
   "dependencies": {
     "@material-ui/core": "4.10.0",
     "@material-ui/icons": "4.9.1",

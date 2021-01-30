@@ -54,7 +54,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <a className={classes.copyright} color="inherit" href="https://github.com/valentinmagot/FitGive">
-        Fit Give
+        FitGive
       </a>{' '}
       {new Date().getFullYear()}
       {'.'}

@@ -19,24 +19,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlignItemsList(props) {
   const classes = useStyles();
-  
+
   const data = props.data;
 
   return (
     <List dense className={classes.root}>
-        {data.map((item, index) =>
+      {data.map((item, index) =>
         <div key={index} >
-         <ListItem alignItems="flex-start">
+          <ListItem alignItems="flex-start">
             <ListItemText id='labelId'
-            primary={item.challengeName}
-            secondary={item.quickStats}
+              primary={item.challengeName}
+              secondary={item.quickStats}
             />
-              <h4>Won</h4>
-         </ListItem>
-        <Divider variant="inset" component="li" />
+            <h4>Won</h4>
+          </ListItem>
+          <Divider variant="inset" component="li" />
         </div>
-        )}
-        
+      )}
     </List>
   );
 }

@@ -31,11 +31,11 @@ export default function Challenges() {
   ];
   return (
     <GridContainer>
-       <Card>
+      <Card>
         <CardHeader color="primary">
-        <h4 className={classes.cardTitleWhite}>Ongoing Challenges</h4>
-            <p className={classes.cardCategoryWhite}>
-              Check out all your ongoing challenges.
+          <h4 className={classes.cardTitleWhite}>Ongoing Challenges</h4>
+          <p className={classes.cardCategoryWhite}>
+            Check out all your ongoing challenges.
             </p>
         </CardHeader>
         <CardBody>

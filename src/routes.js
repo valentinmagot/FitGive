@@ -1,10 +1,12 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import BubbleChart from "@material-ui/icons/BubbleChart";
+import Addbox from "@material-ui/icons/AddBox";
 import SupervisorAccount from "@material-ui/icons/SupervisorAccount";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import Challenges from "views/Challenges/Challenges.js";
+import NewChallenge from "views/Challenges/NewChallenge.js";
 import Friends from "views/Friends/Friends.js";
 
 
@@ -38,13 +40,6 @@ const dashboardRoutes = [
     layout: "/app"
   },
   // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   icon: LocationOn,
-  //   component: Maps,
-  //   layout: "/app"
-  // },
-  // {
   //   path: "/notifications",
   //   name: "Notifications",
   //   icon: Notifications,
@@ -58,13 +53,13 @@ const dashboardRoutes = [
     component: Friends,
     layout: "/app"
   },
-  // {
-  //   path: "/upgrade-to-pro",
-  //   name: "Upgrade To PRO",
-  //   icon: Unarchive,
-  //   component: UpgradeToPro,
-  //   layout: "/app"
-  // }
+  {
+    path: "/new-challenge",
+    name: "New Challenge",
+    icon: Addbox,
+    component: NewChallenge,
+    layout: "/app"
+  },
 ];
 
 export { dashboardRoutes };

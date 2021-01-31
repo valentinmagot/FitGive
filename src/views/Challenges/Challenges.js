@@ -2,6 +2,8 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
+
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import ChallengeList from "components/Lists/ChallengeList"
@@ -9,6 +11,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import CustomCarousel from 'components/Carousel/CustomCarousel'
 
@@ -30,35 +33,40 @@ export default function Challenges() {
     },
   ];
   return (
-    <GridContainer>
-      <Card>
-        <CardHeader color="primary">
-          <h4 className={classes.cardTitleWhite}>Ongoing Challenges</h4>
-          <p className={classes.cardCategoryWhite}>
-            Check out all your ongoing challenges.
+    <>
+      <Link id='newChallenge' to='/app/new-challenge' >
+        <Button color="primary" style={{ float: "right", marginBottom: "3em" }}>New Challenge</Button>
+      </Link>
+      <GridContainer style={{ display: "block" }}>
+        <Card>
+          <CardHeader color="primary">
+            <h4 className={classes.cardTitleWhite}>Ongoing Challenges</h4>
+            <p className={classes.cardCategoryWhite}>
+              Check out all your ongoing challenges.
             </p>
-        </CardHeader>
-        <CardBody>
-          <GridItem xs={12} sm={12} md={12}>
-            <CustomCarousel />
-          </GridItem>
-        </CardBody>
-      </Card>
+          </CardHeader>
+          <CardBody>
+            <GridItem xs={12} sm={12} md={12}>
+              <CustomCarousel />
+            </GridItem>
+          </CardBody>
+        </Card>
 
 
-      <Card>
-        <CardHeader color="primary">
-          <h4 className={classes.cardTitleWhite}>Past Challenges</h4>
-          <p className={classes.cardCategoryWhite}>
-            Check out all your completed challenges.
+        <Card>
+          <CardHeader color="primary">
+            <h4 className={classes.cardTitleWhite}>Past Challenges</h4>
+            <p className={classes.cardCategoryWhite}>
+              Check out all your completed challenges.
               </p>
-        </CardHeader>
-        <CardBody>
-          <GridItem xs={12} sm={12} md={12}>
-            <ChallengeList data={dummyData} />
-          </GridItem>
-        </CardBody>
-      </Card>
-    </GridContainer>
+          </CardHeader>
+          <CardBody>
+            <GridItem xs={12} sm={12} md={12}>
+              <ChallengeList data={dummyData} />
+            </GridItem>
+          </CardBody>
+        </Card>
+      </GridContainer>
+    </>
   );
 }

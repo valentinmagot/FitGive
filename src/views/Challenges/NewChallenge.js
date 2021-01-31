@@ -4,6 +4,11 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
+import Slider from '@material-ui/core/Slider';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -12,7 +17,6 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
@@ -32,8 +36,60 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
-  }
-};
+  },
+  formControl: {
+    margin: "2em 1em",
+    minWidth: "100%",
+  },
+}
+
+const marks = [
+  {
+    value: 1,
+    label: '1 week',
+  },
+  {
+    value: 2,
+    label: '2 weeks',
+  },
+  {
+    value: 4,
+    label: '4 weeks',
+  },
+  {
+    value: 6,
+    label: '6 weeks',
+  },
+];
+
+const moneyMarks = [
+  {
+    value: 0,
+    label: '$0',
+  },
+  {
+    value: 25,
+    label: '$25',
+  },
+  {
+    value: 50,
+    label: '$50',
+  },
+  {
+    value: 75,
+    label: '$75',
+  },
+  {
+    value: 100,
+    label: '$100',
+  },
+];
+
+function moneyvaluetext(value) {
+  return `${value} $`;
+}
+
+
 
 const useStyles = makeStyles(styles);
 
@@ -70,87 +126,76 @@ export default function NewChallenge() {
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={5}>
                   <CustomInput
-                    labelText="Username"
-                    id="username"
+                    labelText="Challenge Friend"
                     formControlProps={{
-                      fullWidth: true
+                      fullWidth: true,
+                      required: true
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Email address"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
                   <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
+                    labelText="Challenge Description"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
                       multiline: true,
-                      rows: 5
+                      rows: 3
                     }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={5}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-label">Exercise</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                    // value={age}
+                    // onChange={handleChange}
+                    >
+                      <MenuItem value={"Pushup"}>Pushup</MenuItem>
+                      <MenuItem value={"Situps"}>Situps</MenuItem>
+                      <MenuItem value={"Pullups"}>Pullups</MenuItem>
+                    </Select>
+                  </FormControl>
+                </GridItem>
+                <GridItem xs={12} sm={12} md={5} style={{margin: "3em"}}>
+                  <InputLabel style={{ color: "#AAAAAA" }}>Challenge Length</InputLabel>
+                  <Slider
+                    defaultValue={2}
+                    aria-labelledby="discrete-slider-always"
+                    step={1}
+                    marks={marks}
+                    valueLabelDisplay="auto"
+                    min={1}
+                    max={6}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={5} style={{margin: "3em 1em"}}>
+                  <InputLabel style={{ color: "#AAAAAA" }}>Repetitions per Day</InputLabel>
+                  <Slider
+                    defaultValue={50}
+                    aria-labelledby="discrete-slider-always"
+                    step={1}
+                    valueLabelDisplay="on"
+                    min={1}
+                    max={200}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={5} style={{margin: "3em 1em"}}>
+                  <InputLabel style={{ color: "#AAAAAA" }}>Amount of Money</InputLabel>
+                  <Slider
+                    defaultValue={25}
+                    getAriaValueText={moneyvaluetext}
+                    aria-labelledby="discrete-slider-always"
+                    step={1}
+                    marks={moneyMarks}
+                    valueLabelDisplay="auto"
+                    min={1}
+                    max={100}
                   />
                 </GridItem>
               </GridContainer>
@@ -163,6 +208,6 @@ export default function NewChallenge() {
           </Card>
         </GridItem>
       </GridContainer>
-    </div>
+    </div >
   );
 }

@@ -1,16 +1,22 @@
 import React from "react";
+//import {db} from "firebase"
+
+
+import {auth, db} from "firebase"
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import {useAuth} from '../../context/authContext'
+
 
 
 // custom components
 import StatCard from "components/CustomCards/StatCard/StatCard"
+//import useAuth from "context/authContext.js"
 import ChartCard from "components/CustomCards/ChartCard/ChartCard"
 import ProfileCard from "components/CustomCards/ProfileCard/ProfileCard"
+import { useAuth } from "context/authContext.js"
 
 import {
   caloriesBunedChart,

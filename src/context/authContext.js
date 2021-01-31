@@ -12,18 +12,29 @@ export function AuthProvider({children}) {
     const [currentUserInfo, setCurrentUserInfo] = useState()
     const [loading, setLoading] = useState(true)
 
-    function signup(firstname, lastname, email, password){
+    function signup(firstname, lastname, initial, email, password){
         var promise = auth.createUserWithEmailAndPassword(email, password).then( cred => {
             const code = cred.user.uid.toString().substr(0, 4)
-            return db.collection('USERS').doc(cred.user.uid).set({
+            const collection = db.collection('USERS').doc(cred.user.uid).collection('FRIENDS').doc().set({
                 code,
+                initial,
+                firstname,
+                lastname
+            })
+            const info = db.collection('USERS').doc(cred.user.uid).set({
+                code,
+                initial,
                 firstname,
                 lastname,
                 email
             })
+            return collection, info
+
         })
         return promise
     }
+
+
 
     function signin(email, password){
         return auth.signInWithEmailAndPassword(email, password)
@@ -51,6 +62,7 @@ export function AuthProvider({children}) {
         
     }
     
+
 
     useEffect(() => {
         setLoading(true)

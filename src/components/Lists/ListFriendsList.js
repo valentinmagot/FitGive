@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -30,20 +30,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlignItemsList(props) {
   const classes = useStyles();
-  
   const data = props.data;
+  const uid = props.uid;
+
+  const filteredFriends = () => {
+    return data.filter((arr, index, self) =>
+    index === self.findIndex((t) => (t.code === arr.code && t.code !== uid)))
+  };
 
   return (
     <List dense className={classes.root}>
-        {data.map((item, index) =>
+        {filteredFriends().map((item, index) =>
         <div key={index} >
          <ListItem alignItems="flex-start">
             <ListItemAvatar>
-            <Avatar className={classes.friend} alt={item.username} src={item.profilePicture} >{item.inital}</Avatar>
+            <Avatar className={classes.friend} alt={item.usernfirstnameame} >{item.initial}</Avatar>
             </ListItemAvatar>
             <ListItemText id='labelId'
-            primary={item.username}
-            secondary={item.quickStats}
+            primary={item.firstname + ' ' + item.lastname}
+            secondary={'Challenge your friends'}
             />
               <ListItemSecondaryAction style={{right: '0px'}}>
                 <FormControlLabel

@@ -24,7 +24,10 @@ import StatCard from "components/CustomCards/StatCard/StatCard"
 //import useAuth from "context/authContext.js"
 import ChartCard from "components/CustomCards/ChartCard/ChartCard"
 import ProfileCard from "components/CustomCards/ProfileCard/ProfileCard"
-import { useAuth } from "context/authContext.js"
+
+import image from 'assets/img/faces/baller.jpg';
+import {useAuth} from '../../context/authContext'
+
 
 import {
   caloriesBunedChart,
@@ -107,10 +110,12 @@ export default function Dashboard() {
       <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
           <ProfileCard 
+            userImage={image}
             userCode={code}
             userFirstName={firstname}
             userLastName={lastname}
-            initial={initial}
+            userBio='Energy and persistence conquers all.'
+            buttonText='Edit Profile'
           />
         </GridItem>
       </GridContainer>

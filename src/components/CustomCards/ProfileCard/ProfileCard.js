@@ -8,13 +8,13 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import Button from "components/CustomButtons/Button.js";
 import Divider from '@material-ui/core/Divider';
 import ProfileAvatar from 'components/ProfileAvatar/ProfileAvatar'
+import { Link } from "react-router-dom";
 
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 
 const useStyles = makeStyles(styles);
-
 export default function ProfileCard(props) {
   const classes = useStyles();
   return (
@@ -33,6 +33,13 @@ export default function ProfileCard(props) {
           <Button color="main" >
             {props.buttonText}
           </Button> */}
+          <Divider />
+          <p className={classes.description}>{props.userBio}</p>
+          <Link to='/app/user'>
+            <Button color="main" >
+                {props.buttonText}
+            </Button>
+          </Link>
         </CardBody>
       </Card>
     </div>

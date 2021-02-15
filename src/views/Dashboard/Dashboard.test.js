@@ -56,16 +56,16 @@ beforeEach(() => {
 
 describe("Dashboard page testing", () => {
   
-  test('User profile card renders', () => {
-    expect(wrapper.containsMatchingElement( 
-      <ProfileCard
-        userCode={props.code}
-        userFirstName={props.firstname}
-        userLastName={props.lastname}
-        initial={props.initial}
-      />
-    )).toBeTruthy()
-  });
+  // test('User profile card renders', () => {
+  //   expect(wrapper.containsMatchingElement( 
+  //     <ProfileCard
+  //       userCode={props.code}
+  //       userFirstName={props.firstname}
+  //       userLastName={props.lastname}
+  //       initial={props.initial}
+  //     />
+  //   )).toBeTruthy()
+  // });
 
 
   test('Challenges won stat card renders', () => {

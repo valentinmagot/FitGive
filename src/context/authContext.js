@@ -10,6 +10,7 @@ export function useAuth() {
 export function AuthProvider({children}) {
     const [currentUser, setCurrentUser] = useState()
     const [currentUserInfo, setCurrentUserInfo] = useState()
+    const [fileUrl, setFileUrl] = useState()
     const [loading, setLoading] = useState(true)
 
     function signup(firstname, lastname, initial, email, password){
@@ -62,6 +63,11 @@ export function AuthProvider({children}) {
         
     }
     
+    function getUserDefaultAvatar(){
+        const fileRef = storage.ref().child('user-nopic.png')
+        setFileUrl(fileRef.getDownloadURL())
+        
+    }
 
 
     useEffect(() => {

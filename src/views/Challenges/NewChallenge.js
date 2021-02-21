@@ -1,14 +1,13 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useState } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { Formik, Field } from "formik";
+import { TextField, Select, CheckboxWithLabel } from "formik-material-ui";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -89,23 +88,15 @@ function moneyvaluetext(value) {
   return `${value} $`;
 }
 
-
-
 const useStyles = makeStyles(styles);
 
 export default function NewChallenge() {
   const classes = useStyles();
-  const dummyData = [
-    {
-      id: 0,
-      challengeName: 'Exercising with my Pals',
-      quickStats: 'Completed 25 sit-ups a day for 10 days.'
-    }, {
-      id: 1,
-      challengeName: 'My First Challenge!',
-      quickStats: 'Completed 5 push-ups a day for 30 days.'
-    },
-  ];
+  const [showPayment, setShowPayment] = React.useState(false);
+  const togglePayment = () => {
+    setShowPayment(!showPayment);
+  }
+
   return (
     <div>
       <GridContainer>
@@ -113,98 +104,142 @@ export default function NewChallenge() {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Start a Challenge</h4>
-              <p className={classes.cardCategoryWhite}>Hit your daily goals together.</p>
+              <p className={classes.cardCategoryWhite}>Hit your daily goals with your friends.</p>
             </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Challenge Name"
-                    formControlProps={{
-                      fullWidth: true,
-                      required: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
-                    labelText="Challenge Friend"
-                    formControlProps={{
-                      fullWidth: true,
-                      required: true
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={12}>
-                  <CustomInput
-                    labelText="Challenge Description"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 3
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={5}>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">Exercise</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                    // value={age}
-                    // onChange={handleChange}
-                    >
-                      <MenuItem value={"Pushup"}>Pushup</MenuItem>
-                      <MenuItem value={"Situps"}>Situps</MenuItem>
-                      <MenuItem value={"Pullups"}>Pullups</MenuItem>
-                    </Select>
-                  </FormControl>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={5} style={{margin: "3em"}}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>Challenge Length</InputLabel>
-                  <Slider
-                    defaultValue={2}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    marks={marks}
-                    valueLabelDisplay="auto"
-                    min={1}
-                    max={6}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={5} style={{margin: "3em 1em"}}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>Repetitions per Day</InputLabel>
-                  <Slider
-                    defaultValue={50}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    valueLabelDisplay="on"
-                    min={1}
-                    max={200}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={5} style={{margin: "3em 1em"}}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>Amount of Money</InputLabel>
-                  <Slider
-                    defaultValue={25}
-                    getAriaValueText={moneyvaluetext}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    marks={moneyMarks}
-                    valueLabelDisplay="auto"
-                    min={1}
-                    max={100}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Link id='newChallenge' to='/app/challenges' >
-                <Button color="primary" submit>Challenge!</Button>
-              </Link>
-            </CardFooter>
+            <Formik
+              initialValues={{
+                challengeName: '',
+                friend: '',
+                description: '',
+                exercise: '',
+                length: '',
+                repetitionGoal: '',
+                addPayment: false,
+                moneyAmount: '',
+              }}
+
+              validate={(values) => {
+                const errors = {};
+
+                if (!values.challengeName) {
+                  errors.email = "Required";
+                }
+
+                return errors;
+              }}
+            >
+              {({ submitForm, isSubmitting }) => (
+                <>
+                  <CardBody>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <Field
+                          component={TextField}
+                          name="challengeName"
+                          type="input"
+                          label="Challenge Name"
+                          style={{ margin: '2em' }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <Field
+                          component={TextField}
+                          name="friend"
+                          type="input"
+                          label="Challenge Friend"
+                          style={{ margin: '2em' }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <Field
+                          component={TextField}
+                          name="description"
+                          type="input"
+                          label="Challenge Description"
+                          style={{ margin: '2em' }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
+                        <InputLabel>Exercise</InputLabel>
+                        <Field
+                          component={Select}
+                          name="exercise"
+                          style={{ minWidth: '10em' }}
+                        >
+                          <MenuItem value={"Pushup"}>Pushup</MenuItem>
+                          <MenuItem value={"Situps"}>Situps</MenuItem>
+                          <MenuItem value={"Pullups"}>Pullups</MenuItem>
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <InputLabel>Length</InputLabel>
+                        <Field
+                          component={Slider}
+                          name="length"
+                          defaultValue={2}
+                          step={1}
+                          marks={marks}
+                          valueLabelDisplay="auto"
+                          min={1}
+                          max={6}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <InputLabel>Repetitions per Day</InputLabel>
+                        <Field
+                          component={Slider}
+                          name="repetitionGoal"
+                          defaultValue={50}
+                          aria-labelledby="discrete-slider-always"
+                          step={1}
+                          valueLabelDisplay="on"
+                          min={1}
+                          max={200}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Field
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          name="checked"
+                          checked={showPayment}
+                          onChange={togglePayment}
+                          Label={{ label: 'I would like to stake money in the challenge' }}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
+                      {showPayment &&
+                        <GridItem xs={12} sm={12} md={5} style={{ margin: "3em 1em" }}>
+                          <InputLabel>Amount of Money At Stake</InputLabel>
+                          <Field
+                            component={Slider}
+                            defaultValue={25}
+                            step={1}
+                            marks={moneyMarks}
+                            valueLabelDisplay="auto"
+                            min={1}
+                            max={100}
+                            style={{ margin: '2em' }}
+                          >
+                          </Field>
+                        </GridItem>
+                      }
+                    </GridContainer>
+                  </CardBody>
+                  <CardFooter>
+                    <Link id='newChallenge' to='/app/challenges' >
+                      <Button color="primary" disabled={isSubmitting}
+                        onClick={submitForm}>Challenge!</Button>
+                    </Link>
+                  </CardFooter>
+                </>
+              )}
+            </Formik>
           </Card>
         </GridItem>
       </GridContainer>

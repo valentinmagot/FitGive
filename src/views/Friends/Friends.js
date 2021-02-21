@@ -58,16 +58,19 @@ const styles = {
 const dummyData = [
   {
     id: 0,
+    inital: 'VM',
     username: 'Valentin',
     profilePicture: '',
     quickStats: 'Completed 5 challenges in the past month.'
   }, {
     id: 1,
+    inital: 'EL',
     username: 'Ellen',
     profilePicture: '',
     quickStats: 'Completed 2 challenges in the past month.'
   }, {
     id: 2,
+    inital: 'HE',
     username: 'Herve',
     profilePicture: '',
     quickStats: 'Completed 1 challenges in the past month.'

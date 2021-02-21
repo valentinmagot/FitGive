@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
   inline: {
     display: 'inline',
   },
+  friend: {
+    color: "#fff",
+    backgroundColor: "#5e86c7"
+  }
 }));
 
 
@@ -35,7 +39,7 @@ export default function AlignItemsList(props) {
         <div key={index} >
          <ListItem alignItems="flex-start">
             <ListItemAvatar>
-            <Avatar variant="square" alt={item.username} src={item.profilePicture} />
+            <Avatar className={classes.friend} alt={item.username} src={item.profilePicture} >{item.inital}</Avatar>
             </ListItemAvatar>
             <ListItemText id='labelId'
             primary={item.username}

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import {auth, db} from "../firebase"
+import {auth, db, storage} from "../firebase"
 
 const AuthContext = React.createContext()
 
@@ -9,11 +9,14 @@ export function useAuth() {
 
 export function AuthProvider({children}) {
     const [currentUser, setCurrentUser] = useState()
+    const [currentUserInfo, setCurrentUserInfo] = useState()
     const [loading, setLoading] = useState(true)
 
     function signup(firstname, lastname, email, password){
         var promise = auth.createUserWithEmailAndPassword(email, password).then( cred => {
+            const code = cred.user.uid.toString().substr(0, 4)
             return db.collection('USERS').doc(cred.user.uid).set({
+                code,
                 firstname,
                 lastname,
                 email
@@ -34,10 +37,26 @@ export function AuthProvider({children}) {
         return auth.sendPasswordResetEmail(email)
     }
 
+    function getUserInfo(user){
+        if(user){
+            db.collection("USERS").doc(user.uid)
+            .get()
+            .then(function(doc) {
+                setCurrentUserInfo(doc.data())
+            })
+            .catch(function(error) {
+                console.log("Error getting documents: ", error);
+            });
+        }
+        
+    }
+    
+
     useEffect(() => {
         setLoading(true)
         const unsubscribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user)
+            getUserInfo(user)
             setLoading(false)
         })
 
@@ -47,6 +66,7 @@ export function AuthProvider({children}) {
 
     const value = {
         currentUser,
+        currentUserInfo,
         signup,
         signin,
         logout,

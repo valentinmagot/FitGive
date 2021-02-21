@@ -4,14 +4,13 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import {useAuth} from '../../context/authContext'
 
 
 // custom components
 import StatCard from "components/CustomCards/StatCard/StatCard"
 import ChartCard from "components/CustomCards/ChartCard/ChartCard"
 import ProfileCard from "components/CustomCards/ProfileCard/ProfileCard"
-
-import image from 'assets/img/faces/baller.jpg';
 
 import {
   caloriesBunedChart,
@@ -26,16 +25,22 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
+  const {currentUserInfo} = useAuth()
+  const code = currentUserInfo ? currentUserInfo.code : ''
+  const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
+  const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
+  const firstname_0 = firstname ? firstname.charAt(0).toUpperCase(): ''
+  const lastname_0 = lastname ? lastname.charAt(0).toUpperCase() : ''
+  const initial = firstname_0 && lastname_0 ? firstname_0 + lastname_0 : ''
   return (
     <div>
       <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
           <ProfileCard 
-            userImage={image}
-            userCode='#647568'
-            userName='John Smith'
-            userBio='Energy and persistence conquers all.'
-            buttonText='Edit Profile'
+            userCode={code}
+            userFirstName={firstname}
+            userLastName={lastname}
+            initial={initial}
           />
         </GridItem>
       </GridContainer>

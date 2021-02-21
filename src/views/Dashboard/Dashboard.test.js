@@ -6,7 +6,7 @@ import ChartCard from '../../components/CustomCards/ChartCard/ChartCard'
 
 import React from 'react'
 
-import image from 'assets/img/faces/baller.jpg';
+import * as AuthContext from '../../context/authContext'
 
 import {configure, shallow } from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
@@ -19,27 +19,52 @@ import {
 } from "variables/charts.js";
 
 let wrapper;
+let props;
 
 beforeAll(() => {
   configure({ adapter: new Adapter() });
 });
 
 beforeEach(() => {
-  wrapper = shallow(<Dashboard />)
+  const contextValues = { 
+    currentUserInfo : {
+      code : '1234',
+      firstname : 'JOHN',
+      lastname : 'SMITH',
+      initial : 'JS'
+    }
+    
+  };
+  props = {
+    code : contextValues.currentUserInfo.code,
+    firstname : contextValues.currentUserInfo.firstname,
+    lastname : contextValues.currentUserInfo.lastname,
+    initial : contextValues.currentUserInfo.initial
+  }
+  jest
+    .spyOn(AuthContext, 'useAuth')
+    .mockImplementation(() => contextValues);
+  wrapper = shallow(<Dashboard />);
+  wrapper.setProps({
+    code : props.code,
+    firstname : props.firstname,
+    lastname : props.lastname,
+    initial : props.initial,
+    
+  })
 });
-
 
 describe("Dashboard page testing", () => {
   
   test('User profile card renders', () => {
     expect(wrapper.containsMatchingElement( 
       <ProfileCard
-        userImage={image} 
-        userCode='#647568'
-        userName='John Smith'
-        userBio='Energy and persistence conquers all.'
-        buttonText='Edit Profile'
-    />)).toBeTruthy()
+        userCode={props.code}
+        userFirstName={props.firstname}
+        userLastName={props.lastname}
+        initial={props.initial}
+      />
+    )).toBeTruthy()
   });
 
 

@@ -19,6 +19,8 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
+import Payment from "./Payment.js"
+
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -214,20 +216,25 @@ export default function NewChallenge() {
                         </Field>
                       </GridItem>
                       {showPayment &&
-                        <GridItem xs={12} sm={12} md={5} style={{ margin: "3em 1em" }}>
-                          <InputLabel>Amount of Money At Stake</InputLabel>
-                          <Field
-                            component={Slider}
-                            defaultValue={25}
-                            step={1}
-                            marks={moneyMarks}
-                            valueLabelDisplay="auto"
-                            min={1}
-                            max={100}
-                            style={{ margin: '2em' }}
-                          >
-                          </Field>
-                        </GridItem>
+                        <>
+                          <GridItem xs={12} sm={12} md={8} style={{ margin: "3em 1em" }}>
+                            <InputLabel>Amount of Money to Stake ($CAD)</InputLabel>
+                            <Field
+                              component={Slider}
+                              defaultValue={25}
+                              step={1}
+                              marks={moneyMarks}
+                              valueLabelDisplay='on'
+                              min={1}
+                              max={100}
+                              style={{ margin: '2em' }}
+                            >
+                            </Field>
+                          </GridItem>
+                          <GridItem xs={12} sm={12} md={6} style={{ margin: "auto" }}>
+                            <Payment />
+                          </GridItem>
+                        </>
                       }
                     </GridContainer>
                   </CardBody>

@@ -9,9 +9,8 @@ import {
 import { useForm, useStep } from "react-hooks-helper";
 
 import Method from "./Method";
-import ManualRecord from "./ManualRecord";
-import AutomaticRecord from "./AutomaticRecord";
-import RecordSubmit from "./RecordSubmit";
+import ConfirmRecord from "./ConfirmRecord";
+import RecordingComplete from "./RecordingComplete";
 
 // core components
 import Button from "components/CustomButtons/Button.js";
@@ -19,9 +18,8 @@ import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 
 const steps = [
     { id: "method" },
-    { id: "manual" },
-    { id: "automatic" },
-    { id: "submit" },
+    { id: "confirmRecord" },
+    { id: "recordingComplete" },
 ];
 
 const useStyles = makeStyles(styles);
@@ -38,12 +36,10 @@ const CompleteChallenge = ({ open, onClose }) => {
         switch (id) {
             case "method":
                 return <Method {...props} />;
-            case "manual":
-                return <ManualRecord {...props} />;
-            case "automatic":
-                return <AutomaticRecord {...props} />;
-            case "submit":
-                return <RecordSubmit {...props} />;
+            case "confirmRecord":
+                return <ConfirmRecord {...props} />;
+            case "recordingComplete":
+                return <RecordingComplete {...props} />;
             default:
                 return <Method {...props} />;
         }

@@ -7,14 +7,20 @@ import { Link } from "react-router-dom";
 
 // core components
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
+import Button from "components/CustomButtons/Button.js";
 
 const useStyles = makeStyles(styles);
 
-export default function RecordSubmit() {
+export default function RecordingComplete({ navigation }) {
     const classes = useStyles();
+    const { previous, next } = navigation;
+
+
     return (
         <>
-            Record
+            <Button onClick={previous}>Edit Submission</Button>
+
+            Confirmation of the day's log
         </>
     );
 }

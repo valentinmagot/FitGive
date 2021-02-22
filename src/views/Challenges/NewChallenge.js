@@ -21,6 +21,10 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+
 const styles = {
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
@@ -124,11 +128,37 @@ export default function NewChallenge() {
                 const errors = {};
 
                 if (!values.challengeName) {
-                  errors.email = "Required";
+                  errors.challengeName = "Required";
                 }
 
                 return errors;
               }}
+
+              onSubmit={(values, { setSubmitting }) => {
+                const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
+
+                firebase
+                  .firestore()
+                  .collection("challenges")
+                  .doc()
+                  .set({
+                    challengeName: challengeName,
+                    friend: friend,
+                    description: description,
+                    exercise: exercise,
+                    length: length,
+                    repetitionGoal: repetitionGoal,
+                    moneyAmount: moneyAmount,
+                  })
+                  .then(() => {
+                    <Link id='newChallenge' to='/app/challenges' />
+                  })
+                  .catch((error) => {
+                    setSubmitting(false);
+                    console.error(error);
+                  });
+              }}
+
             >
               {({ submitForm, isSubmitting }) => (
                 <>
@@ -217,7 +247,7 @@ export default function NewChallenge() {
                       </GridItem>
                       {showPayment &&
                         <>
-                          <GridItem xs={12} sm={12} md={8} style={{ margin: "3em 1em" }}>
+                          <GridItem xs={12} sm={12} md={7} style={{ margin: "1em auto" }}>
                             <InputLabel>Amount of Money to Stake ($CAD)</InputLabel>
                             <Field
                               component={Slider}
@@ -231,7 +261,7 @@ export default function NewChallenge() {
                             >
                             </Field>
                           </GridItem>
-                          <GridItem xs={12} sm={12} md={6} style={{ margin: "auto" }}>
+                          <GridItem xs={12} sm={12} md={7} style={{ margin: "auto" }}>
                             <Payment />
                           </GridItem>
                         </>
@@ -239,10 +269,8 @@ export default function NewChallenge() {
                     </GridContainer>
                   </CardBody>
                   <CardFooter>
-                    <Link id='newChallenge' to='/app/challenges' >
-                      <Button color="primary" disabled={isSubmitting}
-                        onClick={submitForm}>Challenge!</Button>
-                    </Link>
+                    <Button color="primary" disabled={isSubmitting}
+                      onClick={submitForm}>Challenge!</Button>
                   </CardFooter>
                 </>
               )}

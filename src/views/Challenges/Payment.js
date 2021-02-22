@@ -31,7 +31,7 @@ export default class PaymentForm extends React.Component {
                     name={this.state.name}
                     number={this.state.number}
                 />
-                <form>
+                <form style={{width: '15em'}}>
                     <input
                         type="tel"
                         name="number"

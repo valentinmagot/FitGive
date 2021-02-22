@@ -11,15 +11,15 @@ import Button from "components/CustomButtons/Button.js";
 
 const useStyles = makeStyles(styles);
 
-export default function AutomaticRecord({ navigation }) {
+export default function ConfirmRecord({ navigation }) {
     const classes = useStyles();
     const { previous, next } = navigation;
 
     return (
         <>
-            Automatic
+            Summary of the log
             <Button onClick={previous}>Previous</Button>
-            <Button onClick={next}>Next</Button>
+            <Button onClick={next}>Submit</Button>
         </>
     );
 }

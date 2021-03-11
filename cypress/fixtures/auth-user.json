@@ -1,0 +1,8 @@
+{
+    "login_email": "test@test.com",
+    "login_password": "test1234",
+    "signup_email": "cy@cy.com",
+    "signup_password":"cy1234",
+    "signup_firstname": "Cy",
+    "signup_lastname": "Cy"
+}

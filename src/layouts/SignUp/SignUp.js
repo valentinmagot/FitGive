@@ -78,6 +78,12 @@ export default function SignUp() {
   async function handleSubmit(e) {
     e.preventDefault()
 
+    const firstname = firstnameRef.current.value
+    const lastname = lastnameRef.current.value
+    const firstname_0 = firstname ? firstname.charAt(0).toUpperCase(): ''
+    const lastname_0 = lastname ? lastname.charAt(0).toUpperCase() : ''
+    const initial = firstname_0 && lastname_0 ? firstname_0 + lastname_0 : ''
+
     if(passwordRef.current.value !== 
       passwordConfirmRef.current.value){
         return setError('Passwords do not match')
@@ -86,7 +92,7 @@ export default function SignUp() {
       try {
         setError('')
         setLoading(true)
-        await signup(firstnameRef.current.value, lastnameRef.current.value, emailRef.current.value, passwordRef.current.value)
+        await signup(firstname, lastname, initial, emailRef.current.value, passwordRef.current.value)
         setLoading(false) 
         history.push("/app/dashboard")     
       } catch {

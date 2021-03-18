@@ -1,8 +1,8 @@
 /*eslint-disable*/
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -21,9 +21,8 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import {db} from '../../firebase'
+import {useAuth} from "../../context/authContext"
 
 const styles = {
   cardCategoryWhite: {
@@ -98,10 +97,51 @@ const useStyles = makeStyles(styles);
 
 export default function NewChallenge() {
   const classes = useStyles();
+  const { currentUser, currentUserInfo } = useAuth()
   const [showPayment, setShowPayment] = React.useState(false);
+  const [loading, setLoading] = useState(false)
+  const [currentUserFriends, setCurrentUserFriends] = useState([])
+  const [friend, setFriend] = useState()
+  const uid = currentUser ? currentUser.uid : ''
+  const code = currentUserInfo ? currentUserInfo.code : ''
+  const history = useHistory()
+
+  const [moneyValue, setMoneyValue] = useState(25) 
+
   const togglePayment = () => {
     setShowPayment(!showPayment);
   }
+
+  function fetchUserFrienList(uid) {
+    if(uid)
+      db.collection("USERS").doc(uid).collection('FRIENDS')
+      .get()
+      .then(function(querySnapshot) {
+          querySnapshot.forEach((doc) => {
+              setCurrentUserFriends(friend => [...friend, doc.data()])
+          })
+      })
+      .catch(function(error) {
+        console.log("Error getting friends: ", error);
+      });
+  
+  }
+  
+  const filteredFriends = () => {
+    return currentUserFriends.filter((arr, index, self) =>
+    index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
+  };
+
+  const handleMoneyChange = (event, newValue) => {
+    setMoneyValue(newValue);
+    console.log(moneyValue)
+  };
+
+  useEffect(() => {
+    setLoading(true)
+    fetchUserFrienList(uid)
+    setLoading(false)
+  }, [])
 
   return (
     <div>
@@ -137,9 +177,7 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
 
-                firebase
-                  .firestore()
-                  .collection("challenges")
+                db.collection("challenges")
                   .doc()
                   .set({
                     challengeName: challengeName,
@@ -151,7 +189,7 @@ export default function NewChallenge() {
                     moneyAmount: moneyAmount,
                   })
                   .then(() => {
-                    <Link id='newChallenge' to='/app/challenges' />
+                    history.push("/app/challenges")
                   })
                   .catch((error) => {
                     setSubmitting(false);
@@ -173,14 +211,18 @@ export default function NewChallenge() {
                           style={{ margin: '2em' }}
                         />
                       </GridItem>
-                      <GridItem xs={12} sm={12} md={5}>
-                        <Field
-                          component={TextField}
+                      <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
+                      <InputLabel>Friends</InputLabel>
+                      <Field
+                          component={Select}
                           name="friend"
-                          type="input"
-                          label="Challenge Friend"
-                          style={{ margin: '2em' }}
-                        />
+                          style={{ minWidth: '10em' }}
+                          defaultValue = "" 
+                        >
+                          {filteredFriends().map((item, index) =>
+                                <MenuItem  defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
+                            )}
+                        </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>
                         <Field
@@ -223,7 +265,7 @@ export default function NewChallenge() {
                         <Field
                           component={Slider}
                           name="repetitionGoal"
-                          defaultValue={50}
+                          defaultValue={15}
                           aria-labelledby="discrete-slider-always"
                           step={1}
                           valueLabelDisplay="on"

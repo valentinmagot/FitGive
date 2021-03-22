@@ -1,6 +1,8 @@
 import React from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
+import TextField from '@material-ui/core/TextField';
+
 
 export default class PaymentForm extends React.Component {
     state = {
@@ -23,43 +25,49 @@ export default class PaymentForm extends React.Component {
 
     render() {
         return (
-            <div id="PaymentForm" style={{display:"flex"}}>
-                <Cards
-                    cvc={this.state.cvc}
-                    expiry={this.state.expiry}
-                    focused={this.state.focus}
-                    name={this.state.name}
-                    number={this.state.number}
-                />
-                <form style={{width: '15em'}}>
-                    <input
+            <div id="PaymentForm" style={{ display: "flex" }}>
+                <div style={{ margin: 'auto' }}>
+                    <Cards
+                        cvc={this.state.cvc}
+                        expiry={this.state.expiry}
+                        focused={this.state.focus}
+                        name={this.state.name}
+                        number={this.state.number}
+                    />
+                </div>
+                <form style={{ width: '15em' }}>
+                    <TextField
                         type="tel"
                         name="number"
-                        placeholder="Card Number"
+                        label="Card Number"
+                        variant="outlined"
                         onChange={this.handleInputChange}
                         onFocus={this.handleInputFocus}
-                        style={{margin:'1em'}}
+                        style={{ margin: '0.4em' }}
                     />
-                    <input
+                    <TextField
                         name="name"
-                        placeholder="Name"
+                        label="Name"
+                        variant="outlined"
                         onChange={this.handleInputChange}
                         onFocus={this.handleInputFocus}
-                        style={{margin:'1em'}}
+                        style={{ margin: '0.4em' }}
                     />
-                    <input
+                    <TextField
                         name="expiry"
-                        placeholder="Valid Through"
+                        label="Valid Through"
+                        variant="outlined"
                         onChange={this.handleInputChange}
                         onFocus={this.handleInputFocus}
-                        style={{margin:'1em'}}
+                        style={{ margin: '0.4em' }}
                     />
-                    <input
+                    <TextField
                         name="cvc"
-                        placeholder="CVC"
+                        label="CVC"
+                        variant="outlined"
                         onChange={this.handleInputChange}
                         onFocus={this.handleInputFocus}
-                        style={{margin:'1em'}}
+                        style={{ margin: '0.4em' }}
                     />
                 </form>
             </div>

@@ -2,17 +2,16 @@
 import React, { useState } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Formik, Field } from "formik";
 import { TextField, Select, CheckboxWithLabel } from "formik-material-ui";
+import { useHistory } from "react-router-dom";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -21,9 +20,7 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+import { db } from '../../firebase'
 
 const styles = {
   cardCategoryWhite: {
@@ -98,6 +95,8 @@ const useStyles = makeStyles(styles);
 
 export default function NewChallenge() {
   const classes = useStyles();
+  const history = useHistory()
+
   const [showPayment, setShowPayment] = React.useState(false);
   const togglePayment = () => {
     setShowPayment(!showPayment);
@@ -110,14 +109,14 @@ export default function NewChallenge() {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Start a Challenge</h4>
-              <p className={classes.cardCategoryWhite}>Hit your daily goals with your friends.</p>
+              <p className={classes.cardCategoryWhite}>Hit your daily goals with a friend.</p>
             </CardHeader>
             <Formik
               initialValues={{
                 challengeName: '',
                 friend: '',
                 description: '',
-                exercise: '',
+                exercise: 'Pushup',
                 length: '',
                 repetitionGoal: '',
                 addPayment: false,
@@ -130,6 +129,12 @@ export default function NewChallenge() {
                 if (!values.challengeName) {
                   errors.challengeName = "Required";
                 }
+                if (!values.friend) {
+                  errors.friend = "Required";
+                }
+                if (!values.exercise) {
+                  errors.exercise = "Required";
+                }
 
                 return errors;
               }}
@@ -137,9 +142,7 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
 
-                firebase
-                  .firestore()
-                  .collection("challenges")
+                db.collection("challenges")
                   .doc()
                   .set({
                     challengeName: challengeName,
@@ -151,7 +154,7 @@ export default function NewChallenge() {
                     moneyAmount: moneyAmount,
                   })
                   .then(() => {
-                    <Link id='newChallenge' to='/app/challenges' />
+                    history.push("/app/challenges")
                   })
                   .catch((error) => {
                     setSubmitting(false);
@@ -200,7 +203,7 @@ export default function NewChallenge() {
                         >
                           <MenuItem value={"Pushup"}>Pushup</MenuItem>
                           <MenuItem value={"Situps"}>Situps</MenuItem>
-                          <MenuItem value={"Pullups"}>Pullups</MenuItem>
+                          <MenuItem selected value={"Pullups"}>Pullups</MenuItem>
                         </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>

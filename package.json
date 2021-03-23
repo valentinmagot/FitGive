@@ -17,7 +17,6 @@
     "@testing-library/user-event": "^12.1.10",
     "chartist": "0.10.1",
     "classnames": "2.2.6",
-    "cypress": "^6.6.0",
     "firebase": "^8.2.2",
     "history": "4.10.1",
     "perfect-scrollbar": "1.5.0",
@@ -52,6 +51,7 @@
     "typescript": "3.9.3"
   },
   "devDependencies": {
+    "cypress": "^6.8.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "eslint-config-prettier": "6.11.0",

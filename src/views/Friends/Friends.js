@@ -203,8 +203,8 @@ export default function Friends() {
   function deleteFriend(friend_code, uid) {
     setError("")
     if(uid && friend_code){
-      console.log(uid)
-      console.log(friend_code)
+      //console.log(uid)
+      //console.log(friend_code)
       db.collection("USERS").doc(uid).collection('FRIENDS').where('code', '==', friend_code)
       .get()
       .then(function(querySnapshot) {
@@ -214,12 +214,13 @@ export default function Friends() {
         });
         let updatedFriends = currentUserFriends.filter(r => r.code !== friend_code)
         setCurrentUserFriends(updatedFriends)
-        setStatus("Friend added")
+        setStatus("Friend removed")
         
       })
       .catch(function(error) {
         setStatus('')
-        console.log("Error getting friends: ", error);
+        setError('Error deleting friends')
+        //console.log("Error deleting friends: ", error);
       });
      }
 

@@ -35,9 +35,7 @@ export default function Dashboard() {
   const code = currentUserInfo ? currentUserInfo.code : ''
   const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
   const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
-  const firstname_0 = firstname ? firstname.charAt(0).toUpperCase(): ''
-  const lastname_0 = lastname ? lastname.charAt(0).toUpperCase() : ''
-  const initial = firstname_0 && lastname_0 ? firstname_0 + lastname_0 : ''
+  const initial = currentUserInfo ? currentUserInfo.initial : ''
   return (
     <div>
       <GridContainer>

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
-import { Link, useHistory } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -106,9 +105,10 @@ export default function NewChallenge() {
   const [friend, setFriend] = useState()
   const uid = currentUser ? currentUser.uid : ''
   const code = currentUserInfo ? currentUserInfo.code : ''
-  const history = useHistory()
 
-  const [moneyValue, setMoneyValue] = useState(25) 
+  const [repValue, setRepValue] = useState(15)
+  const [moneyValue, setMoneyValue] = useState(0) 
+  const [lengthValue, setLengthValue] = useState(14) 
 
   const togglePayment = () => {
     setShowPayment(!showPayment);
@@ -134,9 +134,39 @@ export default function NewChallenge() {
     index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
   };
 
+  const handleRepChange = (event, newValue) => {
+    setRepValue(newValue);
+  };
+
   const handleMoneyChange = (event, newValue) => {
     setMoneyValue(newValue);
-    console.log(moneyValue)
+  };
+
+  const handleLengthChange = (event, newValue) => {
+    let days;
+    switch (newValue) {
+      case 1:
+        days = 7;
+        break;
+      case 2:
+        days = 14;
+        break;
+      case 3:
+        days = 21;
+        break;
+      case 4:
+        days = 28;
+        break;
+      case 5:
+        days = 35;
+        break;
+      case 6:
+        days = 42;
+        break;
+      default:
+        break;
+    }
+    setLengthValue(days);
   };
 
   useEffect(() => {
@@ -185,6 +215,10 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
 
+                // console.log(repValue)
+                // console.log(lengthValue)
+                // console.log(moneyValue)
+
                 db.collection("challenges")
                   .doc()
                   .set({
@@ -192,9 +226,9 @@ export default function NewChallenge() {
                     friend: friend,
                     description: description,
                     exercise: exercise,
-                    length: length,
-                    repetitionGoal: repetitionGoal,
-                    moneyAmount: moneyAmount,
+                    length: lengthValue,
+                    repetitionGoal: repValue,
+                    moneyAmount: moneyValue,
                   })
                   .then(() => {
                     history.push("/app/challenges")
@@ -262,6 +296,7 @@ export default function NewChallenge() {
                           step={1}
                           marks={marks}
                           valueLabelDisplay="auto"
+                          onChange={handleLengthChange}
                           min={1}
                           max={6}
                           style={{ margin: '2em' }}
@@ -274,7 +309,9 @@ export default function NewChallenge() {
                           component={Slider}
                           name="repetitionGoal"
                           defaultValue={15}
+                          value={repValue}
                           aria-labelledby="discrete-slider-always"
+                          onChange={handleRepChange}
                           step={1}
                           valueLabelDisplay="on"
                           min={1}
@@ -301,8 +338,10 @@ export default function NewChallenge() {
                             <InputLabel>Amount of Money to Stake ($CAD)</InputLabel>
                             <Field
                               component={Slider}
-                              defaultValue={25}
+                              defaultValue={0}
+                              value={moneyValue}
                               step={1}
+                              onChange={handleMoneyChange}
                               marks={moneyMarks}
                               valueLabelDisplay='on'
                               min={1}

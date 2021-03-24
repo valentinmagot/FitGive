@@ -215,13 +215,15 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
 
-                // console.log(repValue)
-                // console.log(lengthValue)
-                // console.log(moneyValue)
+                let startDate = new Date()
+                let endDate = startDate + lengthValue
+                console.log(startDate)
+                console.log(endDate)
 
-                db.collection("challenges")
+                db.collection("CHALLENGES")
                   .doc()
                   .set({
+                    owner: code,
                     challengeName: challengeName,
                     friend: friend,
                     description: description,

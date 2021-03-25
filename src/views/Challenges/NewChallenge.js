@@ -111,7 +111,8 @@ export default function NewChallenge() {
   const [lengthValue, setLengthValue] = useState(14) 
 
   const togglePayment = () => {
-    setShowPayment(!showPayment);
+    setShowPayment(!showPayment)
+    setMoneyValue(0)
   }
 
   function fetchUserFrienList(uid) {
@@ -215,15 +216,16 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
 
-                let startDate = new Date()
-                let endDate = startDate + lengthValue
-                console.log(startDate)
-                console.log(endDate)
-
+                const startDate = new Date()
+                const endDate = new Date()
+                endDate.setDate(startDate.getDate() + lengthValue)
+        
                 db.collection("CHALLENGES")
                   .doc()
                   .set({
                     owner: code,
+                    startDate: startDate,
+                    endDate: endDate,
                     challengeName: challengeName,
                     friend: friend,
                     description: description,
@@ -231,6 +233,8 @@ export default function NewChallenge() {
                     length: lengthValue,
                     repetitionGoal: repValue,
                     moneyAmount: moneyValue,
+                    isComplete: false,
+                    winner: ''
                   })
                   .then(() => {
                     history.push("/app/challenges")

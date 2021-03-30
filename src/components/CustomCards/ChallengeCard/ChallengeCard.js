@@ -28,7 +28,7 @@ export default function ChallengeCard(props) {
 
   return (
     <div>
-      <h6 className={classes.cardCategory}>{props.daysLeft}</h6>
+      <h6 className={classes.cardCategory}>{props.exercise}</h6>
       <h4 className={classes.cardTitle}>{props.challengeName}</h4>
       <Divider />
       <p className={classes.description}>{props.challengeDescription}</p>

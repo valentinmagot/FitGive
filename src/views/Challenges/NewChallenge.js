@@ -140,9 +140,9 @@ export default function NewChallenge() {
               }}
 
               onSubmit={(values, { setSubmitting }) => {
-                const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
+                const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount, status } = values;
 
-                db.collection("challenges")
+                db.collection("CHALLENGES")
                   .doc()
                   .set({
                     challengeName: challengeName,
@@ -152,6 +152,7 @@ export default function NewChallenge() {
                     length: length,
                     repetitionGoal: repetitionGoal,
                     moneyAmount: moneyAmount,
+                    status: "active",
                   })
                   .then(() => {
                     history.push("/app/challenges")

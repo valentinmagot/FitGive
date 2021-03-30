@@ -32,13 +32,11 @@ import CoreButton from "@material-ui/core/Button";
 
 const useStyles = makeStyles(styles);
 
-export default function Method(props, navigation) {
+export default function Method({repetition, challenge, navigation}) {
     const classes = useStyles();
     const { next } = navigation;
-    const repetitionGoal = props.repetition
-    const challengeName = props.challenge
-
-    console.log(props)
+    const repetitionGoal = repetition
+    const challengeName = challenge
 
    const [selectedDate, setSelectedDate] = useState(new Date());
    const [counter, setCounter] = useState(repetitionGoal)

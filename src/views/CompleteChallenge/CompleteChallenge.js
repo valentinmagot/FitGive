@@ -24,18 +24,18 @@ const steps = [
 
 const useStyles = makeStyles(styles);
 
-const CompleteChallenge = ({ open, onClose }) => {
+const CompleteChallenge = ({ open, onClose, challenge, repetition }) => {
     const classes = useStyles();
     const [formData, setForm] = useForm();
     const { step, navigation } = useStep({ initialStep: 0, steps });
     const { id } = step;
 
-    const props = { formData, setForm, navigation };
+    const props = { formData, setForm, navigation, challenge, repetition };
 
     const renderSwitch = (id) => {
         switch (id) {
             case "method":
-                return <Method {...props} />;
+                return <Method  {...props} />;
             case "confirmRecord":
                 return <ConfirmRecord {...props} />;
             case "recordingComplete":
@@ -50,7 +50,7 @@ const CompleteChallenge = ({ open, onClose }) => {
             <Dialog open={open} onClose={onClose} disableBackdropClick={true}>
                 <DialogContent>
                     {renderSwitch(id)}
-                    <Button onClick={onClose}>kms</Button>
+                    <Button onClick={onClose}>Cancel</Button>
                 </DialogContent>
             </Dialog>
         </>

@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
+
+
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -25,22 +27,40 @@ import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import CoreButton from "@material-ui/core/Button";
 
 const useStyles = makeStyles(styles);
 
-export default function Method({ navigation }) {
+export default function Method(props, navigation) {
     const classes = useStyles();
     const { next } = navigation;
-    const challenge = 'Challenge name'
-    const challengeDescription = 'Hardcoded challenge'
-    const friendName = 'Hardcoded name'
-    const exerciceName = 'Hardcoded Exercice'
-    const repetition = 30
+    const repetitionGoal = props.repetition
+    const challengeName = props.challenge
 
-    const [selectedDate, setSelectedDate] = useState(new Date('2014-08-18T21:11:54'));
+    console.log(props)
+
+   const [selectedDate, setSelectedDate] = useState(new Date());
+   const [counter, setCounter] = useState(repetitionGoal)
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+  };
+
+  const handleIncrement = () => {
+    let count = counter + 1
+    if (count > repetitionGoal) {
+      count = repetitionGoal
+    }
+    setCounter(count)
+  };
+
+  const handleDecrement = () => {
+    let count = counter - 1
+    if (count <= 0) {
+      count = 0
+    }
+    setCounter(count)
   };
 
     return (
@@ -58,9 +78,9 @@ export default function Method({ navigation }) {
                                     validate={(values) => {
                                       const errors = {};
                       
-                                      if (!values.repetitionGoal) {
-                                        errors.repetitionGoal = "Required";
-                                      }
+                                      // if (!values.repetitionGoal) {
+                                      //   errors.repetitionGoal = "Required";
+                                      // }
                       
                                       return errors;
                                     }}
@@ -92,73 +112,46 @@ export default function Method({ navigation }) {
                                     {({ submitForm, isSubmitting }) => (
                                       <>
                                           <GridContainer>
-                                          {/* <GridItem xs={12} sm={12} md={5}>
-                                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                          <KeyboardDatePicker
-                                            disableToolbar
-                                            variant="inline"
-                                            format="MM/dd/yyyy"
-                                            margin="normal"
-                                            id="date-picker-inline"
-                                            label="Date picker inline"
-                                            value={selectedDate}
-                                            onChange={handleDateChange}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                            />
-                                            </MuiPickersUtilsProvider>
-                                          </GridItem> */}
-                                            <GridItem xs={12} sm={12} md={5}>
+                                            <GridItem xs={12} sm={12} md={6}>
+                                              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <KeyboardDatePicker
+                                                  disableToolbar
+                                                  variant="inline"
+                                                  format="MM/dd/yyyy"
+                                                  margin="normal"
+                                                  id="date-picker-inline"
+                                                  label="Date picker inline"
+                                                  value={selectedDate}
+                                                  onChange={handleDateChange}
+                                                  style={{ margin: '2em' }}
+                                                  KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                  }}
+                                                />
+                                                </MuiPickersUtilsProvider>
+                                            </GridItem>
+                                            <GridItem xs={12} sm={12} md={6}>
                                               <Field
                                                 component={TextField}
                                                 name="challengeName"
                                                 type="input"
                                                 label="Challenge Name"
-                                                value={challenge}
+                                                disabled
+                                                value={challengeName}
                                                 style={{ margin: '2em' }}
                                               />
                                             </GridItem>
-                                            <GridItem xs={12} sm={12} md={5}>
-                                              <Field
-                                                component={TextField}
-                                                name="friend"
-                                                type="input"
-                                                label="Friend"
-                                                value={friendName}
-                                                style={{ margin: '2em' }}
-                                              />
+                                            <GridItem xs={12} sm={12} md={12} style={{ textAlign: 'center' }}>
+                                            <InputLabel style={{ padding: '1em' }}>Repetitions</InputLabel>
+                                            <ButtonGroup aria-label="small outlined button group">
+                                              <CoreButton onClick={handleIncrement}>+</CoreButton>
+                                              <CoreButton >{counter}</CoreButton>
+                                              <CoreButton onClick={handleDecrement}>-</CoreButton>
+                                            </ButtonGroup>
                                             </GridItem>
-                                            <GridItem xs={12} sm={12} md={5}>
-                                              <Field
-                                                component={TextField}
-                                                name="description"
-                                                type="input"
-                                                label="Challenge Description"
-                                                value={challengeDescription}
-                                                style={{ margin: '2em' }}
-                                              />
-                                            </GridItem>
-                                            <GridItem xs={12} sm={12} md={5}>
-                                              <Field
-                                                component={TextField}
-                                                name="exercise"
-                                                type="input"
-                                                label="Exercice"
-                                                value={exerciceName}
-                                                style={{ margin: '2em' }}
-                                              />
-                                            </GridItem>
-                                            <GridItem xs={12} sm={12} md={5}>
-                                              <Field
-                                                component={TextField}
-                                                name="repetition"
-                                                type="input"
-                                                label="Reps"
-                                                defaultValue={repetition}
-                                                style={{ margin: '2em' }}
-                                              />
-                                            </GridItem>
+                                            
+                                            
+                                            
                                           </GridContainer>
                                       </>
                                     )}

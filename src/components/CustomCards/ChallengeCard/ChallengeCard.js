@@ -34,9 +34,14 @@ export default function ChallengeCard(props) {
       <p className={classes.description}>{props.challengeDescription}</p>
       <Button color="primary"
         onClick={handleClickOpen}>
-        {props.buttonText}
+        {"Complete today's challenge"}
       </Button>
-      <CompleteChallenge open={open} onClose={handleClose}></CompleteChallenge>
+      <CompleteChallenge 
+        challenge={props.challengeName}
+        repetition={props.repetitionGoal}
+        open={open}
+        onClose={handleClose} 
+      />
     </div>
   );
 }

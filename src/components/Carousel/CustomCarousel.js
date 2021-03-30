@@ -23,6 +23,16 @@ export default function CustomCarousel(props) {
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
+function Item(props) {
+    return (
+        <div style={{ padding: "0 100px" }}>
+            <ChallengeCard
+                daysLeft={''}
+                challengeName={props.item.challengeName}
+                challengeDescription={props.item.description}
+                repetitionGoal={props.item.repetitionGoal}
+            />
+        </div>
 
     }, []);
 

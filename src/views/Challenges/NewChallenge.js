@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -20,7 +20,8 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
-import { db } from '../../firebase'
+import {db} from '../../firebase'
+import {useAuth} from "../../context/authContext"
 
 const styles = {
   cardCategoryWhite: {
@@ -95,12 +96,85 @@ const useStyles = makeStyles(styles);
 
 export default function NewChallenge() {
   const classes = useStyles();
+  const { currentUser, currentUserInfo } = useAuth()
   const history = useHistory()
 
   const [showPayment, setShowPayment] = React.useState(false);
+  const [loading, setLoading] = useState(false)
+  const [currentUserFriends, setCurrentUserFriends] = useState([])
+  const [friend, setFriend] = useState()
+  const uid = currentUser ? currentUser.uid : ''
+  const code = currentUserInfo ? currentUserInfo.code : ''
+
+  const [repValue, setRepValue] = useState(15)
+  const [moneyValue, setMoneyValue] = useState(0) 
+  const [lengthValue, setLengthValue] = useState(14) 
+
   const togglePayment = () => {
-    setShowPayment(!showPayment);
+    setShowPayment(!showPayment)
+    setMoneyValue(0)
   }
+
+  function fetchUserFrienList(uid) {
+    if(uid)
+      db.collection("USERS").doc(uid).collection('FRIENDS')
+      .get()
+      .then(function(querySnapshot) {
+          querySnapshot.forEach((doc) => {
+              setCurrentUserFriends(friend => [...friend, doc.data()])
+          })
+      })
+      .catch(function(error) {
+        console.log("Error getting friends: ", error);
+      });
+  
+  }
+  
+  const filteredFriends = () => {
+    return currentUserFriends.filter((arr, index, self) =>
+    index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
+  };
+
+  const handleRepChange = (event, newValue) => {
+    setRepValue(newValue);
+  };
+
+  const handleMoneyChange = (event, newValue) => {
+    setMoneyValue(newValue);
+  };
+
+  const handleLengthChange = (event, newValue) => {
+    let days;
+    switch (newValue) {
+      case 1:
+        days = 7;
+        break;
+      case 2:
+        days = 14;
+        break;
+      case 3:
+        days = 21;
+        break;
+      case 4:
+        days = 28;
+        break;
+      case 5:
+        days = 35;
+        break;
+      case 6:
+        days = 42;
+        break;
+      default:
+        break;
+    }
+    setLengthValue(days);
+  };
+
+  useEffect(() => {
+    setLoading(true)
+    fetchUserFrienList(uid)
+    setLoading(false)
+  }, [])
 
   return (
     <div>
@@ -142,17 +216,25 @@ export default function NewChallenge() {
               onSubmit={(values, { setSubmitting }) => {
                 const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount, status } = values;
 
+                const startDate = new Date()
+                const endDate = new Date()
+                endDate.setDate(startDate.getDate() + lengthValue)
+        
                 db.collection("CHALLENGES")
                   .doc()
                   .set({
+                    owner: code,
+                    startDate: startDate,
+                    endDate: endDate,
                     challengeName: challengeName,
                     friend: friend,
                     description: description,
                     exercise: exercise,
-                    length: length,
-                    repetitionGoal: repetitionGoal,
-                    moneyAmount: moneyAmount,
-                    status: "active",
+                    length: lengthValue,
+                    repetitionGoal: repValue,
+                    moneyAmount: moneyValue,
+                    isComplete: false,
+                    winner: ''
                   })
                   .then(() => {
                     history.push("/app/challenges")
@@ -177,14 +259,18 @@ export default function NewChallenge() {
                           style={{ margin: '2em' }}
                         />
                       </GridItem>
-                      <GridItem xs={12} sm={12} md={5}>
-                        <Field
-                          component={TextField}
+                      <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
+                      <InputLabel>Friends</InputLabel>
+                      <Field
+                          component={Select}
                           name="friend"
-                          type="input"
-                          label="Challenge Friend"
-                          style={{ margin: '2em' }}
-                        />
+                          style={{ minWidth: '10em' }}
+                          defaultValue = "" 
+                        >
+                          {filteredFriends().map((item, index) =>
+                                <MenuItem  defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
+                            )}
+                        </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>
                         <Field
@@ -216,6 +302,7 @@ export default function NewChallenge() {
                           step={1}
                           marks={marks}
                           valueLabelDisplay="auto"
+                          onChange={handleLengthChange}
                           min={1}
                           max={6}
                           style={{ margin: '2em' }}
@@ -227,8 +314,10 @@ export default function NewChallenge() {
                         <Field
                           component={Slider}
                           name="repetitionGoal"
-                          defaultValue={50}
+                          defaultValue={15}
+                          value={repValue}
                           aria-labelledby="discrete-slider-always"
+                          onChange={handleRepChange}
                           step={1}
                           valueLabelDisplay="on"
                           min={1}
@@ -255,8 +344,10 @@ export default function NewChallenge() {
                             <InputLabel>Amount of Money to Stake ($CAD)</InputLabel>
                             <Field
                               component={Slider}
-                              defaultValue={25}
+                              defaultValue={0}
+                              value={moneyValue}
                               step={1}
+                              onChange={handleMoneyChange}
                               marks={moneyMarks}
                               valueLabelDisplay='on'
                               min={1}

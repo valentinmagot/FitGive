@@ -9,7 +9,7 @@ export default function CustomCarousel(props) {
 
     const { currentUser } = useAuth();
     const userID = currentUser.uid.substring(0, 4);
-    console.log(userID);
+    //console.log(userID);
 
     useEffect(() => {
         db.collection("CHALLENGES").where("owner", "==", userID)
@@ -18,34 +18,25 @@ export default function CustomCarousel(props) {
                 querySnapshot.forEach((doc) => {
                     setChallenges(userChallenges => [...userChallenges, doc.data()]);
                 });
-                console.log(JSON.stringify(userChallenges))
+                
             })
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
-function Item(props) {
-    return (
-        <div style={{ padding: "0 100px" }}>
-            <ChallengeCard
-                daysLeft={''}
-                challengeName={props.item.challengeName}
-                challengeDescription={props.item.description}
-                repetitionGoal={props.item.repetitionGoal}
-            />
-        </div>
 
-    }, []);
+        }, []);
 
 
     return (
         userChallenges ?
             (<Carousel animation='slide' autoPlay={false} navButtonsAlwaysVisible={true}>
                 {userChallenges.map(item =>
-                    <div style={{ padding: "0 100px" }}>
+                    <div key={item.challengeName} style={{ padding: "0 100px" }}>
                         <ChallengeCard
                             buttonText={"Today's challenge"}
                             exercise={item.exercise}
                             challengeName={item.challengeName}
+                            repetitionGoal={item.repetitionGoal}
                             challengeDescription={item.description}
                         />
                     </div>)}

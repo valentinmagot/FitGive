@@ -16,7 +16,12 @@ export default function CustomCarousel(props) {
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    setChallenges(userChallenges => [...userChallenges, doc.data()]);
+                    const document = {
+                        id: doc.id,
+                        data: doc.data()
+                    }
+                    setChallenges(userChallenges => [...userChallenges, document]);
+                    console.log(document)
                 });
                 
             })
@@ -31,13 +36,14 @@ export default function CustomCarousel(props) {
         userChallenges ?
             (<Carousel animation='slide' autoPlay={false} navButtonsAlwaysVisible={true}>
                 {userChallenges.map(item =>
-                    <div key={item.challengeName} style={{ padding: "0 100px" }}>
+                    <div key={item.id} style={{ padding: "0 100px" }}>
                         <ChallengeCard
                             buttonText={"Today's challenge"}
-                            exercise={item.exercise}
-                            challengeName={item.challengeName}
-                            repetitionGoal={item.repetitionGoal}
-                            challengeDescription={item.description}
+                            exercise={item.data.exercise}
+                            challengeName={item.data.challengeName}
+                            challengeId={item.id}
+                            repetitionGoal={item.data.repetitionGoal}
+                            challengeDescription={item.data.description}
                         />
                     </div>)}
             </Carousel>)

@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -24,18 +24,23 @@ const steps = [
 
 const useStyles = makeStyles(styles);
 
-const CompleteChallenge = ({ open, onClose, challenge, repetition }) => {
+const CompleteChallenge = ({ open, onClose, challenge, repetition, challengeId }) => {
     const classes = useStyles();
     const [formData, setForm] = useForm();
+    const [data, setData] = useState();
     const { step, navigation } = useStep({ initialStep: 0, steps });
     const { id } = step;
 
-    const props = { formData, setForm, navigation, challenge, repetition };
+    const props = { formData, setForm, data, setData, navigation, challenge, repetition, challengeId };
+
+    const handleFormData = (data) => {
+        setData(data)
+    }
 
     const renderSwitch = (id) => {
         switch (id) {
             case "method":
-                return <Method  {...props} />;
+                return <Method  onDataChange={handleFormData} {...props} />;
             case "confirmRecord":
                 return <ConfirmRecord {...props} />;
             case "recordingComplete":

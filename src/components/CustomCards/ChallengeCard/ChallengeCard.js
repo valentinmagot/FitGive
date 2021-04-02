@@ -38,6 +38,7 @@ export default function ChallengeCard(props) {
       </Button>
       <CompleteChallenge 
         challenge={props.challengeName}
+        challengeId={props.challengeId}
         repetition={props.repetitionGoal}
         open={open}
         onClose={handleClose} 

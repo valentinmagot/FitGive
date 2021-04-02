@@ -19,7 +19,7 @@ import {
 
 // formik
 import { Formik, Field } from "formik";
-import { TextField, Select, CheckboxWithLabel } from "formik-material-ui";
+import { TextField } from "formik-material-ui";
 
 // core components
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
@@ -32,7 +32,7 @@ import CoreButton from "@material-ui/core/Button";
 
 const useStyles = makeStyles(styles);
 
-export default function Method({repetition, challenge, navigation}) {
+export default function Method({repetition, challenge, navigation, onDataChange}) {
     const classes = useStyles();
     const { next } = navigation;
     const repetitionGoal = repetition
@@ -40,6 +40,15 @@ export default function Method({repetition, challenge, navigation}) {
 
    const [selectedDate, setSelectedDate] = useState(new Date());
    const [counter, setCounter] = useState(repetitionGoal)
+   
+
+   useEffect(() => {
+    onDataChange({
+      challengeName: challengeName,
+      repetition: counter,
+      date: selectedDate
+    })
+   }, [])
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -51,6 +60,11 @@ export default function Method({repetition, challenge, navigation}) {
       count = repetitionGoal
     }
     setCounter(count)
+    onDataChange({
+      challengeName: challengeName,
+      repetition: counter,
+      date: selectedDate
+    })
   };
 
   const handleDecrement = () => {
@@ -59,6 +73,11 @@ export default function Method({repetition, challenge, navigation}) {
       count = 0
     }
     setCounter(count)
+    onDataChange({
+      challengeName: challengeName,
+      repetition: counter,
+      date: selectedDate
+    })
   };
 
     return (
@@ -72,41 +91,8 @@ export default function Method({repetition, challenge, navigation}) {
                                 tabName: "Manual",
                                 tabContent: (
                                     <Formik
-                      
-                                    validate={(values) => {
-                                      const errors = {};
-                      
-                                      // if (!values.repetitionGoal) {
-                                      //   errors.repetitionGoal = "Required";
-                                      // }
-                      
-                                      return errors;
-                                    }}
-                      
-                                    onSubmit={(values, { setSubmitting }) => {
-                                      const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount } = values;
-                      
-                                      db.collection("challenges")
-                                        .doc()
-                                        .set({
-                                          challengeName: challengeName,
-                                          friend: friend,
-                                          description: description,
-                                          exercise: exercise,
-                                          length: length,
-                                          repetitionGoal: repetitionGoal,
-                                          moneyAmount: moneyAmount,
-                                        })
-                                        .then(() => {
-                                          history.push("/app/challenges")
-                                        })
-                                        .catch((error) => {
-                                          setSubmitting(false);
-                                          console.error(error);
-                                        });
-                                    }}
-                      
-                                  >
+
+                                      >
                                     {({ submitForm, isSubmitting }) => (
                                       <>
                                           <GridContainer>

@@ -214,7 +214,9 @@ export default function Friends() {
         });
         let updatedFriends = currentUserFriends.filter(r => r.code !== friend_code)
         setCurrentUserFriends(updatedFriends)
-        setStatus("Friend deleted")
+        setStatus("Friend removed")
+
+
         
       })
       .catch(function(error) {

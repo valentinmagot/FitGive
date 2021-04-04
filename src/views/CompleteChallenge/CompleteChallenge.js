@@ -55,7 +55,7 @@ const CompleteChallenge = ({ open, onClose, challenge, repetition, challengeId }
             <Dialog open={open} onClose={onClose} disableBackdropClick={true}>
                 <DialogContent>
                     {renderSwitch(id)}
-                    <Button onClick={onClose}>Cancel</Button>
+                    <Button color="danger" onClick={onClose}>Close</Button>
                 </DialogContent>
             </Dialog>
         </>

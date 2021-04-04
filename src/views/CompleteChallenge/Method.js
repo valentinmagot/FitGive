@@ -62,7 +62,7 @@ export default function Method({repetition, challenge, navigation, onDataChange}
     setCounter(count)
     onDataChange({
       challengeName: challengeName,
-      repetition: counter,
+      repetition: count,
       date: selectedDate
     })
   };
@@ -75,7 +75,7 @@ export default function Method({repetition, challenge, navigation, onDataChange}
     setCounter(count)
     onDataChange({
       challengeName: challengeName,
-      repetition: counter,
+      repetition: count,
       date: selectedDate
     })
   };
@@ -105,6 +105,7 @@ export default function Method({repetition, challenge, navigation, onDataChange}
                                                   margin="normal"
                                                   id="date-picker-inline"
                                                   label="Date picker inline"
+                                                  disabled={true}
                                                   value={selectedDate}
                                                   onChange={handleDateChange}
                                                   style={{ margin: '2em' }}
@@ -128,9 +129,9 @@ export default function Method({repetition, challenge, navigation, onDataChange}
                                             <GridItem xs={12} sm={12} md={12} style={{ textAlign: 'center' }}>
                                             <InputLabel style={{ padding: '1em' }}>Repetitions</InputLabel>
                                             <ButtonGroup aria-label="small outlined button group">
-                                              <CoreButton onClick={handleIncrement}>+</CoreButton>
-                                              <CoreButton >{counter}</CoreButton>
                                               <CoreButton onClick={handleDecrement}>-</CoreButton>
+                                              <CoreButton >{counter}</CoreButton>
+                                              <CoreButton onClick={handleIncrement}>+</CoreButton>
                                             </ButtonGroup>
                                             </GridItem>
                                             
@@ -153,8 +154,7 @@ export default function Method({repetition, challenge, navigation, onDataChange}
                     />
                 </GridItem>
             </GridContainer>
-            Method
-            <Button onClick={next}>Next</Button>
+            <Button  color="primary" onClick={next}>Next</Button>
         </>
     );
 }

@@ -6,14 +6,17 @@ import { db } from '../../firebase'
 
 export default function CustomCarousel(props) {
     const [userChallenges, setChallenges] = useState([]);
+    const [userPastChallenges, setPastChallenges] = useState([]);
 
     const { currentUser } = useAuth();
     const userID = currentUser.uid.substring(0, 4);
     //console.log(userID);
 
-    useEffect(() => {
-        db.collection("CHALLENGES").where("owner", "==", userID)
-            .get()
+    const fetchOngoingChallenges = () => {
+        let query = db.collection("CHALLENGES")
+        query = query.where("owner", "==", userID)
+        query = query.where("isComplete", "==", false)
+            query.get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const document = {
@@ -28,6 +31,31 @@ export default function CustomCarousel(props) {
             .catch((error) => {
                 console.log("Error getting documents: ", error);
             });
+    }
+
+    const fetchPastChallenges = () => {
+        let query = db.collection("CHALLENGES")
+        query = query.where("owner", "==", userID)
+        query = query.where("isComplete", "==", true)
+            query.get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const document = {
+                        id: doc.id,
+                        data: doc.data()
+                    }
+                    setPastChallenges(userChallenges => [...userChallenges, document]);
+                    console.log(document)
+                });
+                
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+    }
+
+    useEffect(() => {
+        fetchOngoingChallenges()
 
         }, []);
 

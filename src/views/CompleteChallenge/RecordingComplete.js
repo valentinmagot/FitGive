@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 // core components
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import Button from "components/CustomButtons/Button.js";
+import GridContainer from "components/Grid/GridContainer";
+import GridItem from "components/Grid/GridItem";
 
 const useStyles = makeStyles(styles);
 
@@ -18,9 +20,14 @@ export default function RecordingComplete({ navigation }) {
 
     return (
         <>
-            <Button onClick={previous}>Edit Submission</Button>
+        <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+            Today's log has been saved successfully.
+        </GridItem>
+        </GridContainer>
+            <Button color="primary" onClick={previous}>Edit Submission</Button>
 
-            Confirmation of the day's log
+            
         </>
     );
 }

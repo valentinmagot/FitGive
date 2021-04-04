@@ -15,6 +15,9 @@ import GridItem from "components/Grid/GridItem";
 import { Formik, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
+//db
+import {db} from '../../firebase'
+
 const useStyles = makeStyles(styles);
 
 export default function ConfirmRecord({ challengeId, data, navigation }) {
@@ -25,15 +28,43 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
     const name = data.challengeName
     const date = data.date
     const reps = data.repetition
+    
 
-    console.log(data)
-    console.log(name, date, reps)
     return (
         <>
-            Summary of the log : {id}
+            Summary of the log :
             <Formik
+                        initialValues={{
+                            challengeName: name,
+                            logdate: date,
+                            repetitions: reps,
 
->
+                          }}
+
+                        onSubmit={(values, { setSubmitting }) => {
+                            const { challengeName, logdate, repetitions} = values;
+                            console.log(logdate.toString())
+                            const day = logdate.getFullYear()+'-'+(logdate.getMonth()+1)+'-'+logdate.getDate();
+                            console.log(id)
+                            db.collection("CHALLENGES")
+                            .doc(id)
+                            .collection("LOGS")
+                            .doc(day)
+                            .set({
+                                name:challengeName,
+                                repetitions: repetitions
+                                
+                            })
+                            .then(() => {
+                                next()
+                            })
+                            .catch((error) => {
+                                setSubmitting(false);
+                                console.error(error);
+                            });
+                        }}
+                    >               
+
                 {({ submitForm, isSubmitting }) => (
                 <>
                     <GridContainer>
@@ -44,7 +75,6 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                         type="input"
                         label="Challenge Name"
                         disabled
-                        value={name}
                         style={{ margin: '2em' }}
                         />
                     </GridItem>
@@ -55,7 +85,6 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                         type="input"
                         label="Log Date"
                         disabled
-                        value={date}
                         style={{ margin: '2em' }}
                         />
                     </GridItem>
@@ -66,7 +95,6 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                         type="input"
                         label="Repetitions"
                         disabled
-                        value={reps}
                         style={{ margin: '2em' }}
                         />
                     </GridItem>
@@ -74,11 +102,14 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                     
                     
                     </GridContainer>
+                    <Button color="warning" onClick={previous}>Previous</Button>
+                    <Button color="primary" onClick={submitForm}>Submit</Button>
                 </>
+                
                 )}
+                
                 </Formik>
-            <Button onClick={previous}>Previous</Button>
-            <Button onClick={next}>Submit</Button>
+            
         </>
     );
 }

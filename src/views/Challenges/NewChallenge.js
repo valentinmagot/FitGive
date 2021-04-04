@@ -219,11 +219,10 @@ export default function NewChallenge() {
                 const startDate = new Date()
                 const endDate = new Date()
                 endDate.setDate(startDate.getDate() + lengthValue)
-
-                let id;
         
-                db.collection("USERS").doc(uid).collection('CHALLENGES')
-                  .add({
+                db.collection("CHALLENGES")
+                  .doc()
+                  .set({
                     owner: code,
                     startDate: startDate,
                     endDate: endDate,
@@ -237,38 +236,13 @@ export default function NewChallenge() {
                     isComplete: false,
                     winner: ''
                   })
-                  .then((docRef) => {
-                    //history.push("/app/challenges")
-                    id = docRef.id
+                  .then(() => {
+                    history.push("/app/challenges")
                   })
                   .catch((error) => {
                     setSubmitting(false);
                     console.error(error);
                   });
-
-                  // db.collection("USERS").doc(friend).collection('CHALLENGES')
-                  // .add({
-                  //   owner: code,
-                  //   startDate: startDate,
-                  //   endDate: endDate,
-                  //   challengeName: challengeName,
-                  //   friend: friend,
-                  //   description: description,
-                  //   exercise: exercise,
-                  //   length: lengthValue,
-                  //   repetitionGoal: repValue,
-                  //   moneyAmount: moneyValue,
-                  //   isComplete: false,
-                  //   winner: ''
-                  // })
-                  // .then(() => {
-                  //   history.push("/app/challenges")
-                    
-                  // })
-                  // .catch((error) => {
-                  //   setSubmitting(false);
-                  //   console.error(error);
-                  // });
               }}
 
             >

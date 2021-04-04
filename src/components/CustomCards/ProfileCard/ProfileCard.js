@@ -7,6 +7,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import Button from "components/CustomButtons/Button.js";
 import Divider from '@material-ui/core/Divider';
+import ProfileAvatar from 'components/ProfileAvatar/ProfileAvatar'
 
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -20,16 +21,18 @@ export default function ProfileCard(props) {
     <div>
       <Card profile >
         <CardAvatar profile>
-          <img src={props.userImage} alt="Profile Picture" />
+          <ProfileAvatar 
+          initial = {props.initial}
+          />
         </CardAvatar>
         <CardBody profile>
           <h6 className={classes.cardCategory}>{props.userCode}</h6>
-          <h4 className={classes.cardTitle}>{props.userName}</h4>
-          <Divider />
+          <h4 className='user-name'>{props.userFirstName} {props.userLastName}</h4>
+          {/* <Divider />
           <p className={classes.description}>{props.userBio}</p>
           <Button color="main" >
             {props.buttonText}
-          </Button>
+          </Button> */}
         </CardBody>
       </Card>
     </div>

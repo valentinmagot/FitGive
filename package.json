@@ -41,8 +41,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "test:coverage": "react-scripts test --env=jsdom --coverage",
+    "test": "react-scripts test --env=jsdom src/__test__",
+    "test:coverage": "react-scripts test --env=jsdom src/__test__ --coverage --watchAll=false",
+    "test:integration": "cypress open",
     "eject": "react-scripts eject",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
     "lint:check": "eslint . --ext=js,jsx;  exit 0",
@@ -57,6 +58,7 @@
     "typescript": "3.9.3"
   },
   "devDependencies": {
+    "cypress": "^6.8.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "eslint-config-prettier": "6.11.0",

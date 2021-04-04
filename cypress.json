@@ -1,0 +1,10 @@
+{
+    "baseUrl": "http://localhost:3000",
+    "testFiles": [
+        "**/Signup.spec.js",
+        "**/Login.spec.js",
+        "**/Navigation.spec.js",
+        "**/AddFriend.spec.js",
+        "**/DeleteFriend.spec.js"
+    ]
+  }

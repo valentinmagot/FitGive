@@ -21,6 +21,29 @@ import CustomCarousel from 'components/Carousel/CustomCarousel';
 
 const useStyles = makeStyles(styles);
 
+// const fetchPastChallenges = () => {
+//   let query = db.collection("CHALLENGES")
+//   query = query.where('participants', "array-contains",userID)
+//   query = query.where("isComplete", "==", true)
+//       query.get()
+//       .then((querySnapshot) => {
+//           querySnapshot.forEach((doc) => {
+//               const document = {
+//                   id: doc.id,
+//                   data: doc.data()
+//               }
+//               setPastChallenges(userChallenges => [...userChallenges, document]);
+//               console.log(document)
+//           });
+          
+//       })
+//       .catch((error) => {
+//           console.log("Error getting documents: ", error);
+//       });
+// }
+
+
+
 export default function Challenges() {
   const classes = useStyles();
   const dummyData = [

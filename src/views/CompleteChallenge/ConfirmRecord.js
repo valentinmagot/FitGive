@@ -17,14 +17,17 @@ import { TextField } from "formik-material-ui";
 
 //db
 import {db} from '../../firebase'
+import {useAuth} from "context/authContext.js"
 
 const useStyles = makeStyles(styles);
 
 export default function ConfirmRecord({ challengeId, data, navigation }) {
     const classes = useStyles();
+    const { currentUser, currentUserInfo } = useAuth()
     const { previous, next } = navigation;
     const summary = data
     const id = challengeId
+    const code = currentUserInfo ? currentUserInfo.code : ''
     const name = data.challengeName
     const date = data.date
     const reps = data.repetition
@@ -44,7 +47,7 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                         onSubmit={(values, { setSubmitting }) => {
                             const { challengeName, logdate, repetitions} = values;
                             console.log(logdate.toString())
-                            const day = logdate.getFullYear()+'-'+(logdate.getMonth()+1)+'-'+logdate.getDate();
+                            const day = code +'-'+logdate.getFullYear()+'-'+(logdate.getMonth()+1)+'-'+logdate.getDate();
                             console.log(id)
                             db.collection("CHALLENGES")
                             .doc(id)
@@ -52,7 +55,8 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                             .doc(day)
                             .set({
                                 name:challengeName,
-                                repetitions: repetitions
+                                repetitions: repetitions,
+                                user:code
                                 
                             })
                             .then(() => {

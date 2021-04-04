@@ -227,7 +227,7 @@ export default function NewChallenge() {
                     startDate: startDate,
                     endDate: endDate,
                     challengeName: challengeName,
-                    friend: friend,
+                    participants:[code,friend],
                     description: description,
                     exercise: exercise,
                     length: lengthValue,

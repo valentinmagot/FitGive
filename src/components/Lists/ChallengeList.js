@@ -15,11 +15,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//db
+import {useAuth} from "context/authContext.js"
 
 
 export default function AlignItemsList(props) {
   const classes = useStyles();
-
+  const { currentUserInfo} = useAuth()
+  const userID = currentUserInfo ? currentUserInfo.code : ''
   const data = props.data;
 
   return (
@@ -28,10 +31,10 @@ export default function AlignItemsList(props) {
         <div key={index} >
           <ListItem alignItems="flex-start">
             <ListItemText id='labelId'
-              primary={item.challengeName}
-              secondary={item.quickStats}
+              primary={item.challengeName + ' - ' + item.exercise}
+              secondary={item.description}
             />
-            <h4>Won</h4>
+            {item.winner == userID ? <h4>Won</h4> : <h4>Lost</h4>}
           </ListItem>
           <Divider variant="inset" component="li" />
         </div>

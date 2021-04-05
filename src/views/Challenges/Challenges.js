@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React from "react";
-import { useState } from "react";
+import {useState,useEffect} from 'react';
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,35 +17,23 @@ import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import CustomCarousel from 'components/Carousel/CustomCarousel';
 
+//db
+import {useAuth} from "context/authContext.js"
+import {db} from "../../firebase"
 
 
 const useStyles = makeStyles(styles);
 
-// const fetchPastChallenges = () => {
-//   let query = db.collection("CHALLENGES")
-//   query = query.where('participants', "array-contains",userID)
-//   query = query.where("isComplete", "==", true)
-//       query.get()
-//       .then((querySnapshot) => {
-//           querySnapshot.forEach((doc) => {
-//               const document = {
-//                   id: doc.id,
-//                   data: doc.data()
-//               }
-//               setPastChallenges(userChallenges => [...userChallenges, document]);
-//               console.log(document)
-//           });
-          
-//       })
-//       .catch((error) => {
-//           console.log("Error getting documents: ", error);
-//       });
-// }
+
+
 
 
 
 export default function Challenges() {
   const classes = useStyles();
+  const {currentUser, currentUserInfo} = useAuth()
+  const userID = currentUserInfo ? currentUserInfo.code : ''
+  const [userPastChallenges, setPastChallenges] = useState([])
   const dummyData = [
     {
       id: 0,
@@ -57,6 +45,32 @@ export default function Challenges() {
       quickStats: 'Completed 5 push-ups a day for 30 days.'
     },
   ];
+
+
+  const fetchPastChallenges = () => {
+    console.log(userID)
+    let query = db.collection("CHALLENGES")
+    query = query.where('participants', "array-contains",userID)
+    query = query.where("isComplete", "==", true)
+        query.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                setPastChallenges(userChallenges => [...userChallenges, doc.data()]);
+                console.log(doc.data())
+            });
+            
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+  }
+  
+  useEffect(() => {
+    
+    fetchPastChallenges()
+  }, [])
+
+  
   return (
     <>
       <Link id='newChallenge' to='/app/new-challenge' >
@@ -87,7 +101,7 @@ export default function Challenges() {
           </CardHeader>
           <CardBody>
             <GridItem xs={12} sm={12} md={12}>
-              <ChallengeList data={dummyData} />
+              <ChallengeList data={userPastChallenges} />
             </GridItem>
           </CardBody>
         </Card>

@@ -67,7 +67,7 @@ export default function Dashboard() {
             querySnapshot.forEach((doc) => {
                 const data = doc.data()
                 const endDate = data.endDate
-                const today = new Date('2021/04/03')
+                const today = new Date()
                 // console.log(today.getDate())
                 // console.log(endDate.toDate())
                 // console.log(doc.id)

@@ -1,14 +1,22 @@
 import React from "react";
+import {useState,useEffect} from 'react';
 //import {db} from "firebase"
 
 
-import {auth, db} from "firebase"
+
+//db
+import {db} from "../../firebase"
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle
+} from "@material-ui/core";
+import Button from "components/CustomButtons/Button.js";
 
 
 // custom components
@@ -36,6 +44,64 @@ export default function Dashboard() {
   const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
   const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
   const initial = currentUserInfo ? currentUserInfo.initial : ''
+  const [open, setOpen] = useState(false);
+  const [userWon, setUserWon] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    // setCurrentPatient("");
+    // retrieveRequests();
+  };
+
+
+  const isChallengeComplete = () => {
+    let query = db.collection("CHALLENGES")
+    let reps = 0
+    query = query.where("isComplete", "==", false)
+        query.get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const data = doc.data()
+                const endDate = data.endDate
+                const today = new Date('2021/04/03')
+                // console.log(today.getDate())
+                // console.log(endDate.toDate())
+                // console.log(doc.id)
+                if(data.winner == code){
+                  setUserWon(true)
+                }
+                if(today > endDate.toDate()){
+                  db.collection("CHALLENGES").doc(doc.id).collection('LOGS').where('user').get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        reps += doc.data()
+                    })
+                  })
+                  db.collection("CHALLENGES").doc(doc.id).update({isComplete: true})
+                  .then(() => {
+                    handleClickOpen()
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+                }
+                
+            });
+            
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+  }
+
+  useEffect(() => {
+    isChallengeComplete()
+  }, [])
+
   return (
     <div>
       <GridContainer>
@@ -153,6 +219,15 @@ export default function Dashboard() {
         />
         </GridItem>
       </GridContainer>
+      {open && 
+          <Dialog open={open} onClose={handleClose} disableBackdropClick={true}>
+          <DialogTitle id="simple-dialog-title">End of challenge</DialogTitle>
+          <DialogContent>
+              {userWon ? <p>Congratualation you are the winner of the challenge</p> : <p>Unfortunately you lost this callenge, great effort !</p>}
+              <Button color="danger" onClick={handleClose}>Close</Button>
+          </DialogContent>
+      </Dialog>
+      }
     </div>
   );
 }

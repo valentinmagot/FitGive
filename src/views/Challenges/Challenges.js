@@ -45,7 +45,7 @@ export default function Challenges() {
       quickStats: 'Completed 5 push-ups a day for 30 days.'
     },
   ];
-
+ 
 
   const fetchPastChallenges = () => {
     console.log(userID)
@@ -66,7 +66,6 @@ export default function Challenges() {
   }
   
   useEffect(() => {
-    
     fetchPastChallenges()
   }, [])
 

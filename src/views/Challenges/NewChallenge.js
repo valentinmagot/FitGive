@@ -290,7 +290,8 @@ export default function NewChallenge() {
                         >
                           <MenuItem value={"Pushup"}>Pushup</MenuItem>
                           <MenuItem value={"Situps"}>Situps</MenuItem>
-                          <MenuItem selected value={"Pullups"}>Pullups</MenuItem>
+                          <MenuItem value={"Pullups"}>Situps</MenuItem>
+                          <MenuItem selected value={"Jumping Jacks"}>Pullups</MenuItem>
                         </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>

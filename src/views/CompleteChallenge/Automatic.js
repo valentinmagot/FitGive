@@ -3,6 +3,7 @@ import * as posenet from "@tensorflow-models/posenet"
 import * as tfjs from '@tensorflow/tfjs';
 
 import InputLabel from "@material-ui/core/InputLabel";
+import Button from "components/CustomButtons/Button.js";
 
 function getPartPosition(pose, part) {
     pose = pose.keypoints
@@ -25,8 +26,8 @@ class Automatic extends React.Component {
     }
 
     static defaultProps = {
-        videoWidth: 500,
-        videoHeight: 500,
+        videoWidth: 800,
+        videoHeight: 600,
         flipHorizontal: true,
         showVideo: true,
         showSkeleton: true,
@@ -39,7 +40,6 @@ class Automatic extends React.Component {
         imageScaleFactor: 0.5,
         skeletonColor: '#ffadea',
         skeletonLineWidth: 6,
-        loadingText: 'Loading...please be patient...'
     }
 
     constructor(props) {
@@ -53,7 +53,6 @@ class Automatic extends React.Component {
             thighLen: 0,
             angle: 0,
             torsoSize: 0,
-            calories: 0,
             lowest: 10000000000,
             pxHeight: 0,
             animation: null,
@@ -229,21 +228,6 @@ class Automatic extends React.Component {
                     ) * 180. / Math.PI
                 });
                 this.setState({ lowest: Math.min(this.state.lowest, Math.abs(pos.eye.y - pos.rankle.y)) })
-                // switch (this.state.squatKeyPos) {
-                //     case 0:
-                //         if (hipKneeDist <= 0.65 * this.state.thighLen && !(this.state.jumpingKeyPos)) {
-                //             this.setState({ squatKeyPos: 1 });
-                //         }
-                //         break;
-                //     case 1:
-                //         if (hipKneeDist / this.state.thighLen >= 0.9) {
-                //             this.setState({ squatKeyPos: 0 });
-                //             this.setState({ squatReps: this.state.squatReps + 1 });
-
-                //             this.setState({ lowest: 10000000000 });
-                //         }
-                //         break;
-                // }
                 switch (this.state.jumpingKeyPos) {
                     case 0:
                         if (this.state.angle >= 35) {
@@ -297,10 +281,9 @@ class Automatic extends React.Component {
                     <canvas className="webcam" ref={this.getCanvas} />
                 </div>
                 <div>
-                    <InputLabel>{this.state.ready ? "START" : "Stand up upright with your entire body in the frame"}</InputLabel>
+                    <InputLabel>{this.state.ready ? "START YOUR EXERCISE" : "Please back up so that your entire body is in the frame"}</InputLabel>
                     <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
-                    <InputLabel>Calories: {this.state.calories.toFixed(2)}</InputLabel>
-                    <input type="button" value="End workout" onClick={this.doWorkout} />
+                    <Button type="button" onClick={this.doWorkout}>End workout</Button>
                 </div>
             </div>
         )

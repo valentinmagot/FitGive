@@ -15,7 +15,6 @@ import { Formik, Field } from "formik";
 import { TextField } from "formik-material-ui";
 
 // core components
-import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer";
 import GridItem from "components/Grid/GridItem";
@@ -25,10 +24,7 @@ import Automatic from "./Automatic.js";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import CoreButton from "@material-ui/core/Button";
 
-const useStyles = makeStyles(styles);
-
 export default function Method({ repetition, challenge, navigation, onDataChange }) {
-  const classes = useStyles();
   const { next } = navigation;
   const repetitionGoal = repetition
   const challengeName = challenge
@@ -135,16 +131,14 @@ export default function Method({ repetition, challenge, navigation, onDataChange
               {
                 tabName: "Automatic",
                 tabContent: (
-                  <GridContainer>
-                    <Automatic></Automatic>
-                  </GridContainer>
+                  <Automatic></Automatic>
                 )
               },
             ]}
           />
         </GridItem>
       </GridContainer>
-      <Button color="primary" onClick={next}>Next</Button>
+      <Button color="primary" style={{ display: "flex", marginLeft: "auto" }} onClick={next}>Next</Button>
     </>
   );
 }

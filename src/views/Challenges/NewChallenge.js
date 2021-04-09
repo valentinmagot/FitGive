@@ -20,8 +20,8 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
-import {db} from '../../firebase'
-import {useAuth} from "../../context/authContext"
+import { db } from '../../firebase'
+import { useAuth } from "../../context/authContext"
 
 const styles = {
   cardCategoryWhite: {
@@ -106,33 +106,33 @@ export default function NewChallenge() {
   const uid = currentUser ? currentUser.uid : ''
   const code = currentUserInfo ? currentUserInfo.code : ''
 
-  const [repValue, setRepValue] = useState(15)
-  const [moneyValue, setMoneyValue] = useState(0) 
-  const [lengthValue, setLengthValue] = useState(14) 
+  const [repValue, setRepValue] = useState(15);
+  const [moneyValue, setMoneyValue] = useState(0);
+  const [lengthValue, setLengthValue] = useState(14);
 
   const togglePayment = () => {
-    setShowPayment(!showPayment)
-    setMoneyValue(0)
+    setShowPayment(!showPayment);
+    setMoneyValue(0);
   }
 
   function fetchUserFrienList(uid) {
-    if(uid)
+    if (uid)
       db.collection("USERS").doc(uid).collection('FRIENDS')
-      .get()
-      .then(function(querySnapshot) {
+        .get()
+        .then(function (querySnapshot) {
           querySnapshot.forEach((doc) => {
-              setCurrentUserFriends(friend => [...friend, doc.data()])
+            setCurrentUserFriends(friend => [...friend, doc.data()])
           })
-      })
-      .catch(function(error) {
-        console.log("Error getting friends: ", error);
-      });
-  
+        })
+        .catch(function (error) {
+          console.log("Error getting friends: ", error);
+        });
+
   }
-  
+
   const filteredFriends = () => {
     return currentUserFriends.filter((arr, index, self) =>
-    index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
+      index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
   };
 
   const handleRepChange = (event, newValue) => {
@@ -190,7 +190,7 @@ export default function NewChallenge() {
                 challengeName: '',
                 friend: '',
                 description: '',
-                exercise: 'Pushup',
+                exercise: 'Jumping Jacks',
                 length: '',
                 repetitionGoal: '',
                 addPayment: false,
@@ -219,7 +219,7 @@ export default function NewChallenge() {
                 const startDate = new Date()
                 const endDate = new Date()
                 endDate.setDate(startDate.getDate() + lengthValue)
-        
+
                 db.collection("CHALLENGES")
                   .doc()
                   .set({
@@ -227,7 +227,7 @@ export default function NewChallenge() {
                     startDate: startDate,
                     endDate: endDate,
                     challengeName: challengeName,
-                    participants:[code,friend],
+                    participants: [code, friend],
                     description: description,
                     exercise: exercise,
                     length: lengthValue,
@@ -260,16 +260,16 @@ export default function NewChallenge() {
                         />
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
-                      <InputLabel>Friends</InputLabel>
-                      <Field
+                        <InputLabel>Friends</InputLabel>
+                        <Field
                           component={Select}
                           name="friend"
                           style={{ minWidth: '10em' }}
-                          defaultValue = "" 
+                          defaultValue=""
                         >
                           {filteredFriends().map((item, index) =>
-                                <MenuItem  defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
-                            )}
+                            <MenuItem defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
+                          )}
                         </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>
@@ -290,8 +290,8 @@ export default function NewChallenge() {
                         >
                           <MenuItem value={"Pushup"}>Pushup</MenuItem>
                           <MenuItem value={"Situps"}>Situps</MenuItem>
-                          <MenuItem value={"Pullups"}>Situps</MenuItem>
-                          <MenuItem selected value={"Jumping Jacks"}>Pullups</MenuItem>
+                          <MenuItem value={"Pullups"}>Pullups</MenuItem>
+                          <MenuItem selected value={"Jumping Jacks"}>Jumping Jacks</MenuItem>
                         </Field>
                       </GridItem>
                       <GridItem xs={12} sm={12} md={5}>

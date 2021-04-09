@@ -4,6 +4,8 @@ import * as tfjs from '@tensorflow/tfjs';
 
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "components/CustomButtons/Button.js";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Alert from '@material-ui/lab/Alert';
 
 function getPartPosition(pose, part) {
     pose = pose.keypoints
@@ -17,21 +19,12 @@ function getPartPosition(pose, part) {
 
 class Automatic extends React.Component {
 
-    doWorkout() {
-        this.setState({ running: false })
-        this.video.srcObject.getTracks().forEach(function (track) {
-            track.stop();
-        });
-        // save to firebase and redirect
-    }
-
     static defaultProps = {
         videoWidth: 800,
         videoHeight: 600,
         flipHorizontal: true,
         showVideo: true,
         showSkeleton: true,
-        showPoints: true,
         minPoseConfidence: 0.1,
         minPartConfidence: 0.5,
         maxPoseDetections: 2,
@@ -47,6 +40,7 @@ class Automatic extends React.Component {
         this.state = {
             t1: performance.now(),
             ready: false,
+            loading: true,
             jumpingKeyPos: 0,
             jumpingJackReps: 0,
             hkdist: 0,
@@ -57,10 +51,10 @@ class Automatic extends React.Component {
             pxHeight: 0,
             animation: null,
             running: true,
-            redirect: false
+            showPoints: true,
         }
 
-        this.doWorkout = this.doWorkout.bind(this);
+        this.finishWorkout = this.finishWorkout.bind(this);
     }
 
     getCanvas = elem => {
@@ -245,7 +239,7 @@ class Automatic extends React.Component {
                 }
             }
 
-            if (showPoints) {
+            if (this.state.showPoints) {
                 for (var i = 0; i < pose.keypoints.length; i++) {
                     const keypoint = pose.keypoints[i];
                     if (keypoint.score < minPartConfidence) {
@@ -270,21 +264,37 @@ class Automatic extends React.Component {
         findPoseDetectionFrame()
     }
 
+    finishWorkout() {
+        this.setState({ running: false, showPoints: false })
+        this.video.srcObject.getTracks().forEach(function (track) {
+            track.stop();
+        });
+        // save to firebase 
+    }
+
     render() {
+        let cameraDivStyle;
+        if (!this.state.loading && this.state.running) {
+            this.state.ready ? cameraDivStyle = { border: "0.5em solid green" } : cameraDivStyle = { border: "0.5em solid red" };
+        }
+
         return (
-            <div>
-                {/* {this.state.redirect ? <Redirect to="/dashboard" /> : ""} */}
+            <div style={{ float: "left" }}>
+                {!this.state.loading && this.state.running ? (this.state.ready ? <Alert severity="success" style={{ marginBottom: "1em" }}>{"START YOUR EXERCISE"}</Alert> : <Alert style={{ marginBottom: "1em" }} severity="error">{"Please back up so that your entire body is in the frame"}</Alert>) : ""}
+
                 <div>
                     <video id="videoNoShow" playsInline ref={this.getVideo} style={{
                         display: "none"
                     }} />
-                    <canvas className="webcam" ref={this.getCanvas} />
+                    <canvas className="webcam" ref={this.getCanvas} style={cameraDivStyle} />
                 </div>
-                <div>
-                    <InputLabel>{this.state.ready ? "START YOUR EXERCISE" : "Please back up so that your entire body is in the frame"}</InputLabel>
-                    <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
-                    <Button type="button" onClick={this.doWorkout}>End workout</Button>
-                </div>
+                {this.state.loading ?
+                    <CircularProgress style={{ position: 'absolute', left: '50%', top: '50%' }} /> :
+                    <div style={{ float: "right", padding: "2em" }}>
+                        <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
+                        {this.state.running ? <Button type="button" onClick={this.finishWorkout}>End workout</Button> : ""}
+                    </div>
+                }
             </div>
         )
     }

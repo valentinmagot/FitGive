@@ -181,7 +181,6 @@ class Automatic extends React.Component {
                 canvasContext.restore()
             }
 
-            // WIP squat detection
             var pos = {
                 lhip: getPartPosition(pose, "leftHip"),
                 rhip: getPartPosition(pose, "rightHip"),
@@ -274,15 +273,13 @@ class Automatic extends React.Component {
 
     render() {
         let cameraDivStyle;
-        if (!this.state.loading && this.state.running) {
-            this.state.ready ? cameraDivStyle = { border: "0.5em solid green" } : cameraDivStyle = { border: "0.5em solid red" };
-        }
+        !this.state.loading && this.state.running ? (this.state.ready ? cameraDivStyle = { border: "0.5em solid green" } : cameraDivStyle = { border: "0.5em solid red" }) : cameraDivStyle = { border: "0.5em" }
 
         return (
-            <div style={{ float: "left" }}>
+            <div>
                 {!this.state.loading && this.state.running ? (this.state.ready ? <Alert severity="success" style={{ marginBottom: "1em" }}>{"START YOUR EXERCISE"}</Alert> : <Alert style={{ marginBottom: "1em" }} severity="error">{"Please back up so that your entire body is in the frame"}</Alert>) : ""}
 
-                <div>
+                <div style={{ float: "left" }}>
                     <video id="videoNoShow" playsInline ref={this.getVideo} style={{
                         display: "none"
                     }} />
@@ -290,9 +287,11 @@ class Automatic extends React.Component {
                 </div>
                 {this.state.loading ?
                     <CircularProgress style={{ position: 'absolute', left: '50%', top: '50%' }} /> :
-                    <div style={{ float: "right", padding: "2em" }}>
-                        <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
-                        {this.state.running ? <Button type="button" onClick={this.finishWorkout}>End workout</Button> : ""}
+                    <div style={{ display: "flex", justifyContent: "center", height: "600px" }}>
+                        <div style={{ alignSelf: "center", padding: "2rem" }}>
+                            <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
+                            {this.state.running ? <Button type="button" onClick={this.finishWorkout}>End workout</Button> : ""}
+                        </div>
                     </div>
                 }
             </div>

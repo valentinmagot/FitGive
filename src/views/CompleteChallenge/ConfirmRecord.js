@@ -21,8 +21,7 @@ import { useAuth } from "context/authContext.js"
 const useStyles = makeStyles(styles);
 
 export default function ConfirmRecord({ challengeId, data, navigation }) {
-    const classes = useStyles();
-    const { currentUser, currentUserInfo } = useAuth()
+    const { currentUserInfo } = useAuth()
     const { previous, next } = navigation;
     const summary = data
     const id = challengeId

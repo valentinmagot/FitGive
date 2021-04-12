@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import { db } from "../../firebase";
 import { useAuth } from "context/authContext.js"
-import Button from '@material-ui/core/Button';
 
 import CommentInput from "./CommentInput";
 import { makeStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(() => ({
     post: {
@@ -38,7 +39,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function Post({ id, userName, postImageUrl, caption, comments, user }) {
+function Post({ id, authorID, userName, caption, comments }) {
     const classes = useStyles();
     const { currentUserInfo } = useAuth();
     const currentUserName = currentUserInfo ? currentUserInfo.firstname : '';
@@ -57,9 +58,17 @@ function Post({ id, userName, postImageUrl, caption, comments, user }) {
             });
     };
 
+    const copyCodeToClipboard = () => {
+        let dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = authorID;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+    }
+
     return (
         <div className={classes.post}>
-
             {currentUserName?.toLowerCase() === userName.toLowerCase() ? (
                 <Button
                     onClick={deletePost}
@@ -85,35 +94,28 @@ function Post({ id, userName, postImageUrl, caption, comments, user }) {
                         alignItems: "center",
                     }}
                 >
-                    <Avatar
-                        style={{ backgroundColor: "#5e86c7" }}
-                        alt={userName.toLowerCase()}
-                    >
-                        {userName.charAt(0)}
-                    </Avatar>
+                    <Tooltip title={authorID} arrow>
+                        <button
+                            onClick={copyCodeToClipboard}
+                            style={{ backgroundColor: "transparent", border: "none", cursor: "pointer" }}>
+                            <Avatar
+                                style={{ backgroundColor: "#5e86c7" }}
+                                alt={userName.toLowerCase()}
+                            >
+                                {userName.charAt(0)}
+                            </Avatar>
+                        </button>
+                    </Tooltip>
                     <div className={classes.headerInfo}>
                         <p style={{ fontSize: "1.2em" }}>{userName}</p>
                     </div>
                 </div>
             </div>
 
-            {postImageUrl ?
-                (
-                    <div>
-                        <img className={classes.image} src={postImageUrl} />
-                        <div className={classes.bottom}>
-                            <p>
-                                <strong>{userName}</strong> {caption}
-                            </p>
-                        </div>
-                    </div>)
-                :
-                <div className={classes.textBox}>
-                    <p>{caption}</p>
-                </div>
+            <div className={classes.textBox}>
+                <p>{caption}</p>
+            </div>
 
-
-            }
             {comments ? (
                 comments.map((comment) => (
                     <div style={{ padding: "0.5em 0 0 1.5em" }}>

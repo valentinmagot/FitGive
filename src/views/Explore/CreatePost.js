@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(() => ({
     post: {
-        marginTop: "3em",
         alignSelf: "center",
         width: "40%",
         backgroundColor: "white",

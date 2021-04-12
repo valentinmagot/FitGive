@@ -29,9 +29,6 @@ function Explore({ user }) {
     useEffect(() => {
         db.collection("EXPLORE").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
             console.log(snapshot.docs)
-            // snapshot.docs.forEach((doc) => {
-            //     posts.push(({ id: doc.id, post: doc.data() }));
-            // })
             setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
         });
     }, []);
@@ -49,7 +46,6 @@ function Explore({ user }) {
                             userName={post.authorName}
                             caption={post.caption}
                             comments={post.comments}
-                            user={user}
                         />
                     ))}
                 </div>

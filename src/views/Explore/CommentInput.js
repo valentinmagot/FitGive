@@ -33,12 +33,13 @@ function CommentInput({ comments, id, user }) {
         <div style={{
             display: "flex",
             justifyContent: "space-between",
-            padding: "16px 1.5em",
+            padding: "0.5em 1.5em",
         }}>
-            <TextField style={{ width: "100%" }}
+            <TextField style={{ width: "100%", paddingTop: 10 }}
                 rows="1"
                 value={comment}
                 size="small"
+                InputProps={{ disableUnderline: true }}
                 onChange={(e) => setComment(e.target.value)}
                 inputProps={{ style: { fontSize: "0.8em" } }}
                 placeholder="Add a comment...">

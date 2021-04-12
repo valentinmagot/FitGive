@@ -3,12 +3,14 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import Addbox from "@material-ui/icons/AddBox";
 import SupervisorAccount from "@material-ui/icons/SupervisorAccount";
+import ExploreIcon from '@material-ui/icons/Explore';
+
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import Challenges from "views/Challenges/Challenges.js";
 import NewChallenge from "views/Challenges/NewChallenge.js";
 import Friends from "views/Friends/Friends.js";
-
+import Explore from "views/Explore/Explore";
 
 const dashboardRoutes = [
   {
@@ -18,20 +20,6 @@ const dashboardRoutes = [
     component: DashboardPage,
     layout: "/app"
   },
-  // {
-  //   path: "/table",
-  //   name: "Table List",
-  //   icon: "content_paste",
-  //   component: TableList,
-  //   layout: "/app"
-  // },
-  // {
-  //   path: "/typography",
-  //   name: "Typography",
-  //   icon: LibraryBooks,
-  //   component: Typography,
-  //   layout: "/app"
-  // },
   {
     path: "/challenges",
     name: "Challenges",
@@ -39,13 +27,13 @@ const dashboardRoutes = [
     component: Challenges,
     layout: "/app"
   },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   icon: Notifications,
-  //   component: NotificationsPage,
-  //   layout: "/app"
-  // },
+  {
+    path: "/explore",
+    name: "Explore",
+    icon: ExploreIcon,
+    component: Explore,
+    layout: "/app"
+  },
   {
     path: "/friends",
     name: "Friends",

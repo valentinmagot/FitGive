@@ -1,14 +1,41 @@
 import React, { useState } from "react";
 import { db } from "../../firebase";
 import { useAuth } from "context/authContext.js";
+import { makeStyles } from "@material-ui/core/styles";
+
 import firebase from "firebase";
+
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles(() => ({
+    post: {
+        marginTop: "3em",
+        alignSelf: "center",
+        width: "40%",
+        backgroundColor: "white",
+        marginBottom: "16px",
+        borderRadius: "10px",
+        border: "2px solid #cdd8e9",
+    },
+    button: {
+        float: "right",
+        padding: "1.5em",
+        background: "none",
+    },
+    textBox: {
+        padding: "0 0 0.5em 1em;",
+        fontWeight: "500",
+        fontSize: "1.5em",
+    },
+}));
+
 
 function CreatePost({ user }) {
     const [caption, setCaption] = useState("");
-    const [progress, setProgress] = useState(0);
+    const classes = useStyles();
 
     const { currentUserInfo } = useAuth();
-    console.log(currentUserInfo);
     const currentUserName = currentUserInfo ? currentUserInfo.firstname : '';
     const authorName = currentUserName.charAt(0).toUpperCase() + currentUserName.slice(1);
     const authorID = currentUserInfo ? currentUserInfo.code : '';
@@ -24,34 +51,33 @@ function CreatePost({ user }) {
     };
 
     return (
-        <div className="app__createPost">
-            <div className="imageUpload">
-                <div className="createAPost__Top">
-                    <p>Create a Post</p>
-                </div>
-                {/* <progress value={progress} max="100" /> */}
-
-                <div className="createAPost__center">
-                    <textarea
-                        className="createAPost__textarea"
-                        name="create a post"
-                        rows="2"
-                        value={caption}
-                        placeholder="Enter a caption..."
-                        onChange={(e) => setCaption(e.target.value)}
-                    ></textarea>
-                </div>
+        <div className={classes.post}>
+            <div className={classes.textBox}>
+                <p>Create a Post</p>
             </div>
-            <button
-                className="button"
+            <div style={{ margin: "0 2em" }}>
+                <TextField
+                    multiline
+                    rows={2}
+                    value={caption}
+                    placeholder="Enter a caption..."
+                    style={{ width: "100%" }}
+                    onChange={(e) => setCaption(e.target.value)}
+                    InputProps={{ disableUnderline: true }}
+                ></TextField>
+            </div>
+            <Button
+                className={classes.button}
                 onClick={handleUpload}
+                disabled={caption.replace(/\s/g, '').length ? false : true}
                 style={{
-                    color: caption ? "gray" : "lightgrey",
-                    fontWeight: caption ? "600" : "500",
+                    color: caption.replace(/\s/g, '').length ? "#2862bf" : "#7f9bca",
+                    marginLeft: "1em",
+                    background: "none",
                 }}
             >
-                Upload
-            </button>
+                Post
+            </Button>
         </div>
     );
 }

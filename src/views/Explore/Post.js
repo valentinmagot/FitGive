@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     post: {
         backgroundColor: "white",
         marginBottom: "16px",
-        borderRadius: "5px",
+        borderRadius: "10px",
     },
     image: {
         width: "100%",

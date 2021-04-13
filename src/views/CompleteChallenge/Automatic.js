@@ -41,6 +41,7 @@ class Automatic extends React.Component {
             t1: performance.now(),
             ready: false,
             loading: true,
+            maxRep: this.props.repetition,
             jumpingKeyPos: 0,
             jumpingJackReps: 0,
             hkdist: 0,
@@ -230,8 +231,9 @@ class Automatic extends React.Component {
                     case 1:
                         if (this.state.angle <= 15) {
                             this.setState({ jumpingKeyPos: 0 });
-                            this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
-
+                            if(this.state.jumpingJackReps < this.state.maxRep){
+                                this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
+                            }
                             this.setState({ lowest: 10000000000 });
                         }
                         break;
@@ -269,6 +271,11 @@ class Automatic extends React.Component {
             track.stop();
         });
         // save to firebase 
+        this.props.onDataChange({
+            repetition: this.state.jumpingJackReps,
+            challengeName: this.props.challengeName,
+            date: this.props.date
+        })
     }
 
     render() {

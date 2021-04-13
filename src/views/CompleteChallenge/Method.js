@@ -131,7 +131,13 @@ export default function Method({ repetition, challenge, navigation, onDataChange
               {
                 tabName: "Automatic",
                 tabContent: (
-                  <Automatic></Automatic>
+                  <Automatic 
+                    onDataChange={onDataChange}
+                    challengeName={challengeName}
+                    repetition={repetitionGoal}
+                    date={selectedDate}
+
+                  />
                 )
               },
             ]}

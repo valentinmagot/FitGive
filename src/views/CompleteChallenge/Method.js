@@ -154,7 +154,7 @@ export default function Method({repetition, challenge, navigation, onDataChange}
                     />
                 </GridItem>
             </GridContainer>
-            <Button  color="primary" onClick={next}>Next</Button>
+            <Button color="primary" onClick={next}>Next</Button>
         </>
     );
 }

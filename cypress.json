@@ -5,6 +5,7 @@
         "**/Login.spec.js",
         "**/Navigation.spec.js",
         "**/AddFriend.spec.js",
-        "**/DeleteFriend.spec.js"
+        "**/DeleteFriend.spec.js",
+        "**/Challenges.spec.js"
     ]
   }

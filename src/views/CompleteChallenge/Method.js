@@ -46,6 +46,9 @@ export default function Method({ repetition, challenge, navigation, onDataChange
 
   const handleIncrement = () => {
     let count = counter + 1;
+    if (count > repetitionGoal) {
+      count = repetitionGoal
+    }
     setCounter(count)
     onDataChange({
       challengeName: challengeName,

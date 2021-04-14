@@ -44,6 +44,7 @@ function Post({ id, authorID, userName, caption, comments }) {
     const { currentUserInfo } = useAuth();
     const currentUserName = currentUserInfo ? currentUserInfo.firstname : '';
     const currUser = currentUserName.charAt(0).toUpperCase() + currentUserName.slice(1);
+    
 
     const deletePost = () => {
         //delete post
@@ -117,8 +118,8 @@ function Post({ id, authorID, userName, caption, comments }) {
             </div>
 
             {comments ? (
-                comments.map((comment) => (
-                    <div style={{ padding: "0.5em 0 0 1.5em" }}>
+                comments.map((comment, index) => (
+                    <div key={index} style={{ padding: "0.5em 0 0 1.5em" }}>
                         <strong>{comment.username}</strong> {comment.comment}
                     </div>
                 ))

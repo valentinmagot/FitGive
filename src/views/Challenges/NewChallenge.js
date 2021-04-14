@@ -293,6 +293,7 @@ export default function NewChallenge() {
                         InputLabelProps={{
                           shrink: true,
                         }}
+                        InputProps={{ inputProps: { min: 0 } }}
                         onChange={handleRepChange}
                         value={repValue}
                         defaultValue={25}
@@ -318,6 +319,7 @@ export default function NewChallenge() {
                               className={classes.element}
                               label="Amount of Money ($CAD)"
                               type="number"
+                            InputProps={{ inputProps: { min: 0 } }}
                               InputLabelProps={{
                                 shrink: true,
                               }}

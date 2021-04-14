@@ -74,7 +74,9 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                                     name="challengeName"
                                     type="input"
                                     label="Challenge Name"
-                                    disabled
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                     style={{ margin: '2em' }}
                                 />
                             </GridItem>
@@ -84,7 +86,9 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                                     name="logdate"
                                     type="input"
                                     label="Log Date"
-                                    disabled
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                     style={{ margin: '2em' }}
                                 />
                             </GridItem>
@@ -93,9 +97,11 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                                     component={TextField}
                                     name="repetitions"
                                     type="input"
-                                    label="Repetitions"
-                                    disabled
+                                    label="Reps Completed"
                                     style={{ margin: '2em' }}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                 />
                             </GridItem>
                         </GridContainer>

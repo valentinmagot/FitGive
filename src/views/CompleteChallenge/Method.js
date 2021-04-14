@@ -45,10 +45,7 @@ export default function Method({ repetition, challenge, navigation, onDataChange
   };
 
   const handleIncrement = () => {
-    let count = counter + 1
-    if (count > repetitionGoal) {
-      count = repetitionGoal
-    }
+    let count = counter + 1;
     setCounter(count)
     onDataChange({
       challengeName: challengeName,
@@ -92,8 +89,10 @@ export default function Method({ repetition, challenge, navigation, onDataChange
                                 format="MM/dd/yyyy"
                                 margin="normal"
                                 id="date-picker-inline"
-                                label="Date picker inline"
-                                disabled={true}
+                                label="Log Date"
+                                InputProps={{
+                                  readOnly: true,
+                                }}                                         
                                 value={selectedDate}
                                 onChange={handleDateChange}
                                 style={{ margin: '2em' }}
@@ -109,13 +108,15 @@ export default function Method({ repetition, challenge, navigation, onDataChange
                               name="challengeName"
                               type="input"
                               label="Challenge Name"
-                              disabled
+                              InputProps={{
+                                readOnly: true,
+                              }}                                       
                               value={challengeName}
                               style={{ margin: '2em' }}
                             />
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12} style={{ textAlign: 'center' }}>
-                            <InputLabel style={{ padding: '1em' }}>Repetitions</InputLabel>
+                            <InputLabel style={{ padding: '1em' }}>Reps Completed</InputLabel>
                             <ButtonGroup aria-label="small outlined button group">
                               <CoreButton onClick={handleDecrement}>-</CoreButton>
                               <CoreButton >{counter}</CoreButton>

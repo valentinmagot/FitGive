@@ -19,8 +19,8 @@ export default function RecordingComplete({ navigation }) {
     return (
         <>
             <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                    Today's log has been saved successfully.
+                <GridItem xs={12} sm={12} md={12} style={{margin: "2em"}}>
+                    <h4>Today's log has been saved successfully.</h4>
                 </GridItem>
             </GridContainer>
             <Button color="primary" onClick={previous}>Edit Submission</Button>

@@ -24,7 +24,6 @@ class Automatic extends React.Component {
         videoHeight: 600,
         flipHorizontal: true,
         showVideo: true,
-        showSkeleton: true,
         minPoseConfidence: 0.1,
         minPartConfidence: 0.5,
         maxPoseDetections: 2,
@@ -41,7 +40,6 @@ class Automatic extends React.Component {
             t1: performance.now(),
             ready: false,
             loading: true,
-            maxRep: this.props.repetition,
             jumpingKeyPos: 0,
             jumpingJackReps: 0,
             hkdist: 0,
@@ -70,9 +68,7 @@ class Automatic extends React.Component {
         try {
             await this.setupCamera()
         } catch (error) {
-            throw new Error(
-                'This browser does not support video capture, or this device does not have a camera'
-            )
+            console.log(error);
         }
 
         try {
@@ -209,7 +205,7 @@ class Automatic extends React.Component {
                     this.setState({ thighLen: Math.abs(pos.rhip.y - pos.rknee.y) })
                     this.setState({ pxHeight: Math.abs(pos.eye.y - pos.rankle.y) })
                 }
-                this.setState({ hkdist: hipKneeDist });
+                this.setState({ hkdist: hipKneeDist, showSkeleton: true });
                 const rightPosition = [pos.rankle.x, pos.rankle.y];
                 const leftPosition = [pos.lankle.x, pos.lankle.y];
                 const midpointHips = [(pos.lhip.x + pos.rhip.x) / 2, (pos.lhip.y + pos.rhip.y) / 2];
@@ -219,28 +215,26 @@ class Automatic extends React.Component {
                     angle: Math.acos(
                         (Math.pow(this.distance(leftPosition, rightPosition), 2) - Math.pow(a, 2) - Math.pow(b, 2))
                         / (-2 * a * b)
-                    ) * 180. / Math.PI
+                    ) * 180 / Math.PI
                 });
                 this.setState({ lowest: Math.min(this.state.lowest, Math.abs(pos.eye.y - pos.rankle.y)) })
                 switch (this.state.jumpingKeyPos) {
                     case 0:
-                        if (this.state.angle >= 35) {
+                        if (this.state.angle >= 40) {
                             this.setState({ jumpingKeyPos: 1 });
                         }
                         break;
                     case 1:
                         if (this.state.angle <= 15) {
                             this.setState({ jumpingKeyPos: 0 });
-                            if(this.state.jumpingJackReps < this.state.maxRep){
-                                this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
-                            }
+                            this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
                             this.setState({ lowest: 10000000000 });
                         }
                         break;
                 }
             }
 
-            if (this.state.showPoints) {
+            if (this.state.showPoints && this.state.ready && this.state.running) {
                 for (var i = 0; i < pose.keypoints.length; i++) {
                     const keypoint = pose.keypoints[i];
                     if (keypoint.score < minPartConfidence) {
@@ -266,11 +260,11 @@ class Automatic extends React.Component {
     }
 
     finishWorkout() {
-        this.setState({ running: false, showPoints: false })
+        this.setState({ running: false, showPoints: false, showSkeleton: false })
         this.video.srcObject.getTracks().forEach(function (track) {
             track.stop();
         });
-        // save to firebase 
+
         this.props.onDataChange({
             repetition: this.state.jumpingJackReps,
             challengeName: this.props.challengeName,
@@ -295,8 +289,9 @@ class Automatic extends React.Component {
                 {this.state.loading ?
                     <CircularProgress style={{ position: 'absolute', left: '50%', top: '50%' }} /> :
                     <div style={{ display: "flex", justifyContent: "center", height: "600px" }}>
-                        <div style={{ alignSelf: "center", padding: "2rem" }}>
-                            <InputLabel>Jumping Jack Reps: {this.state.jumpingJackReps}</InputLabel>
+                        <div style={{ alignSelf: "center", padding: "2rem", textAlign: "center" }}>
+                            <h2>Reps Completed</h2>
+                            <h1 style={{ fontWeight: 500, fontSize: "4em" }}>{this.state.jumpingJackReps}</h1>
                             {this.state.running ? <Button type="button" onClick={this.finishWorkout}>End workout</Button> : ""}
                         </div>
                     </div>

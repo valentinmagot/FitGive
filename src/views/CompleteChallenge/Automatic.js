@@ -224,8 +224,10 @@ class Automatic extends React.Component {
                         break;
                     case 1:
                         if (this.state.angle <= 15) {
+                            if (this.state.jumpingJackReps < this.props.repetition) {
+                                this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
+                            }
                             this.setState({ jumpingKeyPos: 0 });
-                            this.setState({ jumpingJackReps: this.state.jumpingJackReps + 1 });
                             this.setState({ lowest: 10000000000 });
                         }
                         break;

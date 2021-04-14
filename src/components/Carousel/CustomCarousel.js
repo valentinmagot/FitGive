@@ -10,7 +10,6 @@ export default function CustomCarousel(props) {
 
     const { currentUser } = useAuth();
     const userID = currentUser.uid.substring(0, 4);
-    //console.log(userID);
 
     const fetchOngoingChallenges = () => {
         let query = db.collection("CHALLENGES")

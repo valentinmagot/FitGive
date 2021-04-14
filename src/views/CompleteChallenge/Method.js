@@ -138,7 +138,6 @@ export default function Method({ repetition, challenge, navigation, onDataChange
                     challengeName={challengeName}
                     repetition={repetitionGoal}
                     date={selectedDate}
-
                   />
                 )
               },
@@ -146,7 +145,7 @@ export default function Method({ repetition, challenge, navigation, onDataChange
           />
         </GridItem>
       </GridContainer>
-      <Button color="primary" style={{ display: "flex", marginLeft: "auto" }} onClick={next}>Next</Button>
-    </>
-  );
+      <Button color="primary" onClick={next}>Next</Button>
+      </>
+   );
 }

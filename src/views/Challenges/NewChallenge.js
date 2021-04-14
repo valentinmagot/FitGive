@@ -85,8 +85,8 @@ export default function NewChallenge() {
   const today = new Date();
 
   const togglePayment = () => {
-    setShowPayment(!showPayment)
-    setMoneyValue(0)
+    setShowPayment(!showPayment);
+    setMoneyValue(0);
   }
 
   function fetchUserFrienList(uid) {
@@ -145,7 +145,7 @@ export default function NewChallenge() {
                 challengeName: '',
                 friend: '',
                 description: '',
-                exercise: 'Pushup',
+                exercise: 'Jumping Jacks',
                 repetitionGoal: '',
                 addPayment: false,
                 moneyAmount: '',

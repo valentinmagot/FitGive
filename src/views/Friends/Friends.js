@@ -313,7 +313,7 @@ async function handleSubmit(e) {
     }
     if(currentUserInfo.code == code){
       setStatus('')
-      return setError("Connot add yourself as friend")
+      return setError("Cannot add yourself as friend")
     }
     if(f) {
       console.log('user is friend')

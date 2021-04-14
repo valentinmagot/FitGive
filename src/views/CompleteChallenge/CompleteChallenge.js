@@ -13,8 +13,9 @@ import ConfirmRecord from "./ConfirmRecord";
 import RecordingComplete from "./RecordingComplete";
 
 // core components
-import Button from "components/CustomButtons/Button.js";
+import IconButton from '@material-ui/core/IconButton';
 import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
+import CloseIcon from '@material-ui/icons/Close';
 
 const steps = [
     { id: "method" },
@@ -22,7 +23,17 @@ const steps = [
     { id: "recordingComplete" },
 ];
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles((theme) => ({
+    closeButton: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        color: theme.palette.grey[500],
+    },
+    dialog: {
+        margin:"1em",
+    }
+}));
 
 const CompleteChallenge = ({ open, onClose, challenge, repetition, challengeId }) => {
     const classes = useStyles();
@@ -40,7 +51,7 @@ const CompleteChallenge = ({ open, onClose, challenge, repetition, challengeId }
     const renderSwitch = (id) => {
         switch (id) {
             case "method":
-                return <Method  onDataChange={handleFormData} {...props} />;
+                return <Method onDataChange={handleFormData} {...props} />;
             case "confirmRecord":
                 return <ConfirmRecord {...props} />;
             case "recordingComplete":
@@ -52,10 +63,12 @@ const CompleteChallenge = ({ open, onClose, challenge, repetition, challengeId }
 
     return (
         <>
-            <Dialog open={open} onClose={onClose} disableBackdropClick={true}>
-                <DialogContent>
+            <Dialog open={open} onClose={onClose} disableBackdropClick={true} maxWidth={false}>
+                <DialogContent className={classes.dialog}>
                     {renderSwitch(id)}
-                    <Button color="danger" onClick={onClose}>Close</Button>
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                        <CloseIcon />
+                    </IconButton>
                 </DialogContent>
             </Dialog>
         </>

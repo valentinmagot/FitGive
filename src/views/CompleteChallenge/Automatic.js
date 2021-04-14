@@ -160,6 +160,7 @@ class Automatic extends React.Component {
         const video = this.video
 
         const findPoseDetectionFrame = async () => {
+            try {
 
             const pose = await posenetModel.estimateSinglePose(
                 video,
@@ -253,10 +254,16 @@ class Automatic extends React.Component {
                         [keypoints[1].position.x, keypoints[1].position.y]);
                 });
             }
-            if (this.state.running)
+            if (this.state.running){
                 requestAnimationFrame(findPoseDetectionFrame)
+            }
+        } catch (error) {
+              console.log(error)  
+        }
+            
         }
         findPoseDetectionFrame()
+        
     }
 
     finishWorkout() {

@@ -74,7 +74,7 @@ class Automatic extends React.Component {
         try {
             this.posenet = await posenet.load()
         } catch (error) {
-            throw new Error('PoseNet failed to load')
+            console.log(error)
         } finally {
             setTimeout(() => {
                 this.setState({ loading: false })
@@ -85,9 +85,7 @@ class Automatic extends React.Component {
 
     async setupCamera() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Error(
-                'Browser API navigator.mediaDevices.getUserMedia not available'
-            )
+            console.log(error)
         }
         const { videoWidth, videoHeight } = this.props
         const video = this.video

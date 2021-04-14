@@ -91,11 +91,9 @@ export default function Method({ repetition, challenge, navigation, onDataChange
                                 variant="inline"
                                 format="MM/dd/yyyy"
                                 margin="normal"
+                                readOnly= {true}
                                 id="date-picker-inline"
-                                label="Log Date"
-                                InputProps={{
-                                  readOnly: true,
-                                }}                                         
+                                label="Log Date"                              
                                 value={selectedDate}
                                 onChange={handleDateChange}
                                 style={{ margin: '2em' }}

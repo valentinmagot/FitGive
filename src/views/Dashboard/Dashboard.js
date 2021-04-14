@@ -1,11 +1,11 @@
 import React from "react";
-import {useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 //import {db} from "firebase"
 
 
 
 //db
-import {db} from "../../firebase"
+import { db } from "../../firebase"
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -39,13 +39,16 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  const {currentUserInfo} = useAuth()
+  const { currentUserInfo } = useAuth()
   const code = currentUserInfo ? currentUserInfo.code : ''
   const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
   const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
   const initial = currentUserInfo ? currentUserInfo.initial : ''
+  const uid = currentUserInfo ? currentUserInfo.uid : ''
+
   const [open, setOpen] = useState(false);
   const [userWon, setUserWon] = useState(false);
+  const [countFriends, setCountFriends] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -56,57 +59,94 @@ export default function Dashboard() {
     // setCurrentPatient("");
     // retrieveRequests();
   };
+  // const getStats = () => {
+  //   let query = db.collection("USERS")
 
+
+  // }
+  const retrieveFriends = () => {
+    if (currentUserInfo) {
+      // db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
+      //   setCountFriends(snap.size);
+      // });
+      db.collection("USERS").doc(uid).collection('FRIENDS')
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach((doc) => {
+            console.log(doc);
+          })
+        })
+    }
+  }
 
   const isChallengeComplete = () => {
     let query = db.collection("CHALLENGES")
     let reps = 0
     query = query.where("isComplete", "==", false)
-        query.get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const data = doc.data()
-                const endDate = data.endDate
-                const today = new Date()
-                // console.log(today.getDate())
-                // console.log(endDate.toDate())
-                // console.log(doc.id)
-                if(data.winner == code){
-                  setUserWon(true)
-                }
-                if(today > endDate.toDate()){
-                  db.collection("CHALLENGES").doc(doc.id).collection('LOGS').where('user').get()
-                  .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        reps += doc.data()
-                    })
-                  })
-                  db.collection("CHALLENGES").doc(doc.id).update({isComplete: true})
-                  .then(() => {
-                    handleClickOpen()
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-                }
-                
-            });
-            
-        })
-        .catch((error) => {
-            console.log("Error getting documents: ", error);
+    query.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          const endDate = data.endDate
+          const today = new Date()
+          // console.log(today.getDate())
+          // console.log(endDate.toDate())
+          // console.log(doc.id)
+          if (data.winner == code) {
+            setUserWon(true)
+          }
+          if (today > endDate.toDate()) {
+            db.collection("CHALLENGES").doc(doc.id).collection('LOGS').where('user').get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                  reps += doc.data()
+                })
+              })
+            db.collection("CHALLENGES").doc(doc.id).update({ isComplete: true })
+              .then(() => {
+                handleClickOpen()
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+
         });
+
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
   }
 
   useEffect(() => {
-    isChallengeComplete()
+    isChallengeComplete();
+    console.log()
+    if (currentUserInfo) {
+      db.collection("USERS").doc(uid).onSnapshot((snapshot) => {
+        console.log(snapshot.docs)
+        // setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
+      });
+    }
+    if (currentUserInfo) {
+      // db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
+      //   setCountFriends(snap.size);
+      // });
+      db.collection("USERS").doc(uid).collection('FRIENDS')
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach((doc) => {
+            console.log(doc);
+          })
+        })
+    }
   }, [])
 
   return (
     <div>
       <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-          <ProfileCard 
+        <GridItem xs={12} sm={12} md={12}>
+          <ProfileCard
             userCode={code}
             userFirstName={firstname}
             userLastName={lastname}
@@ -116,117 +156,117 @@ export default function Dashboard() {
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={6} md={3}>
-          <StatCard 
-            cardTitle= 'Challenges Won'
-            cardStat= '2'
-            cardLink= 'see details'
-            cardIcon= 'emoji_events'
-            cardHeader= 'warning'
+          <StatCard
+            cardTitle='Challenges Won'
+            cardStat='2'
+            cardLink='see details'
+            cardIcon='emoji_events'
+            cardHeader='warning'
             cardLinkIcon='link'
           />
-          
+
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
-           <StatCard 
-                 cardTitle= 'Challenges Lost'
-                 cardStat= '0'
-                 cardLink= 'see details'
-                 cardIcon= 'cancel'
-                 cardHeader= 'danger'
-                 cardLinkIcon='link'
+          <StatCard
+            cardTitle='Challenges Lost'
+            cardStat='0'
+            cardLink='see details'
+            cardIcon='cancel'
+            cardHeader='danger'
+            cardLinkIcon='link'
           />
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
-          <StatCard 
-                cardTitle= 'Money Pledged'
-                cardStat= '20$'
-                cardLink= 'just updated'
-                cardIcon= 'local_atm'
-                cardHeader= 'success'
-                cardLinkIcon='access_time'
-            />
-          
+          <StatCard
+            cardTitle='Money Pledged'
+            cardStat='20$'
+            cardLink='just updated'
+            cardIcon='local_atm'
+            cardHeader='success'
+            cardLinkIcon='access_time'
+          />
+
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
-           <StatCard 
-             cardTitle= 'Friends'
-             cardStat= '3'
-             cardLink= 'just updated'
-             cardIcon= 'accessibility'
-             cardHeader= 'info'
-             cardLinkIcon='access_time'
+          <StatCard
+            cardTitle='Friends'
+            cardStat={countFriends}
+            cardLink='just updated'
+            cardIcon='accessibility'
+            cardHeader='info'
+            cardLinkIcon='access_time'
           />
         </GridItem>
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
-        <ChartCard 
+          <ChartCard
             cardTitle='Calories Burned'
             cardHeader='primary'
             cardSubTitle='Total calories burned during exercises'
-            cardStatus='Updated 1 minute ago'
+            cardStatus='Updated Just Now'
             cardStatusIcon='access_time'
             cardChartType='Bar'
             cardVariableData={caloriesBunedChart.data}
             cardVariableOptions={caloriesBunedChart.option}
             cardVariableResponsiveOptions={caloriesBunedChart.responsiveOptions}
             cardVariableAnimation={caloriesBunedChart.animation}
-        
+
           />
-          
+
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
-          <ChartCard 
+          <ChartCard
             cardTitle='Money Donated'
             cardHeader='primary'
             cardSubTitle='Amount of money donated to charities.'
-            cardStatus='updated 12 days ago'
+            cardStatus='Updated Just Now'
             cardStatusIcon='access_time'
             cardChartType='Line'
             cardVariableData={moneyGeneratedChart.data}
             cardVariableOptions={moneyGeneratedChart.option}
             cardVariableResponsiveOptions={moneyGeneratedChart.responsiveOptions}
             cardVariableAnimation={moneyGeneratedChart.animation}
-        
+
           />
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
-            <ChartCard 
-                cardTitle='Workout time'
-                cardHeader='primary'
-                cardSubTitle='Total workout minutes of the week'
-                cardStatus='Updated 1 minute ago'
-                cardStatusIcon='access_time'
-                cardChartType='Bar'
-                cardVariableData={workoutTimeChart.data}
-                cardVariableOptions={workoutTimeChart.option}
-                cardVariableResponsiveOptions={workoutTimeChart.responsiveOptions}
-                cardVariableAnimation={workoutTimeChart.animation}
-            />
+          <ChartCard
+            cardTitle='Workout time'
+            cardHeader='primary'
+            cardSubTitle='Total workout minutes of the week'
+            cardStatus='Updated Just Now'
+            cardStatusIcon='access_time'
+            cardChartType='Bar'
+            cardVariableData={workoutTimeChart.data}
+            cardVariableOptions={workoutTimeChart.option}
+            cardVariableResponsiveOptions={workoutTimeChart.responsiveOptions}
+            cardVariableAnimation={workoutTimeChart.animation}
+          />
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
-            <ChartCard 
+          <ChartCard
             cardTitle='Comunity growth'
             cardHeader='primary'
             cardSubTitle='Commutnity growth over the year'
-            cardStatus='updated 2 days ago'
+            cardStatus='Updated Just Now'
             cardStatusIcon='access_time'
             cardChartType='Line'
             cardVariableData={communityGrowthChart.data}
             cardVariableOptions={communityGrowthChart.option}
             cardVariableResponsiveOptions={communityGrowthChart.responsiveOptions}
             cardVariableAnimation={communityGrowthChart.animation}
-        />
+          />
         </GridItem>
       </GridContainer>
-      {open && 
-          <Dialog open={open} onClose={handleClose} disableBackdropClick={true}>
+      {open &&
+        <Dialog open={open} onClose={handleClose} disableBackdropClick={true}>
           <DialogTitle id="simple-dialog-title">End of challenge</DialogTitle>
           <DialogContent>
-              {userWon ? <p>Congratualation you are the winner of the challenge</p> : <p>Unfortunately you lost this callenge, great effort !</p>}
-              <Button color="danger" onClick={handleClose}>Close</Button>
+            {userWon ? <p>Congratualation you are the winner of the challenge</p> : <p>Unfortunately you lost this callenge, great effort !</p>}
+            <Button color="danger" onClick={handleClose}>Close</Button>
           </DialogContent>
-      </Dialog>
+        </Dialog>
       }
     </div>
   );

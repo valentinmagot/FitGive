@@ -2,8 +2,6 @@ import React from "react";
 import { useState, useEffect } from 'react';
 //import {db} from "firebase"
 
-
-
 //db
 import { db } from "../../firebase"
 // @material-ui/core
@@ -28,9 +26,7 @@ import { useAuth } from "context/authContext.js"
 
 import {
   caloriesBunedChart,
-  workoutTimeChart,
   moneyGeneratedChart,
-  communityGrowthChart
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -44,7 +40,7 @@ export default function Dashboard() {
   const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
   const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
   const initial = currentUserInfo ? currentUserInfo.initial : ''
-  const uid = currentUser ? currentUser.uid : ''
+  const uid = currentUser ? currentUser.uid : '';
 
   const [open, setOpen] = useState(false);
   const [userWon, setUserWon] = useState(false);
@@ -52,6 +48,8 @@ export default function Dashboard() {
   const [countWon, setCountWon] = useState(0);
   const [countLost, setCountLost] = useState(0);
   const [countMoney, setCountMoney] = useState(0);
+  const [graphMoney, setGraphMoney] = useState([0,0,0,0,0,0,0,0,0,0,0,0]);
+  const [graphReps, setGraphReps] = useState([0,0,0,0,0,0,0]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -60,6 +58,37 @@ export default function Dashboard() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const calBurnedData = {
+    labels: [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun",
+    ],
+    series: [graphReps]
+  }
+  const moneyGeneratedChartData = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    series: [graphMoney]
+  }
+
 
   const getStats = () => {
     if (currentUser) {
@@ -72,7 +101,9 @@ export default function Dashboard() {
           if (doc.data().statMoney) {
             setCountLost(doc.data().statLost)
             setCountWon(doc.data().statWon)
-            setCountMoney(doc.data().statMoney)
+            setCountMoney(doc.data().statAmount)
+            setGraphMoney(doc.data().statMoney)
+            setGraphReps(doc.data().statReps)
           }
         })
         .catch(function (error) {
@@ -185,13 +216,13 @@ export default function Dashboard() {
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <ChartCard
-            cardTitle='Calories Burned'
+            cardTitle='Reps Completed'
             cardHeader='primary'
-            cardSubTitle='Total calories burned during exercises'
+            cardSubTitle='Number of Reps Completed this Week'
             cardStatus='Updated Just Now'
             cardStatusIcon='access_time'
-            cardChartType='Bar'
-            cardVariableData={caloriesBunedChart.data}
+            cardChartType='Line'
+            cardVariableData={calBurnedData}
             cardVariableOptions={caloriesBunedChart.option}
             cardVariableResponsiveOptions={caloriesBunedChart.responsiveOptions}
             cardVariableAnimation={caloriesBunedChart.animation}
@@ -203,43 +234,15 @@ export default function Dashboard() {
           <ChartCard
             cardTitle='Money Donated'
             cardHeader='primary'
-            cardSubTitle='Amount of money donated to charities.'
+            cardSubTitle='Amount of Money Donated to Charities.'
             cardStatus='Updated Just Now'
             cardStatusIcon='access_time'
-            cardChartType='Line'
-            cardVariableData={moneyGeneratedChart.data}
+            cardChartType='Bar'
+            cardVariableData={moneyGeneratedChartData}
             cardVariableOptions={moneyGeneratedChart.option}
             cardVariableResponsiveOptions={moneyGeneratedChart.responsiveOptions}
             cardVariableAnimation={moneyGeneratedChart.animation}
 
-          />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <ChartCard
-            cardTitle='Workout time'
-            cardHeader='primary'
-            cardSubTitle='Total workout minutes of the week'
-            cardStatus='Updated Just Now'
-            cardStatusIcon='access_time'
-            cardChartType='Bar'
-            cardVariableData={workoutTimeChart.data}
-            cardVariableOptions={workoutTimeChart.option}
-            cardVariableResponsiveOptions={workoutTimeChart.responsiveOptions}
-            cardVariableAnimation={workoutTimeChart.animation}
-          />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <ChartCard
-            cardTitle='Comunity growth'
-            cardHeader='primary'
-            cardSubTitle='Commutnity growth over the year'
-            cardStatus='Updated Just Now'
-            cardStatusIcon='access_time'
-            cardChartType='Line'
-            cardVariableData={communityGrowthChart.data}
-            cardVariableOptions={communityGrowthChart.option}
-            cardVariableResponsiveOptions={communityGrowthChart.responsiveOptions}
-            cardVariableAnimation={communityGrowthChart.animation}
           />
         </GridItem>
       </GridContainer>

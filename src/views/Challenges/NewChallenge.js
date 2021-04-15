@@ -5,19 +5,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-
-import { default as NumberField } from '@material-ui/core/TextField';
-
 import { Formik, Field } from "formik";
-import { TextField, CheckboxWithLabel } from "formik-material-ui";
+import { TextField, Select, CheckboxWithLabel } from "formik-material-ui";
 import { useHistory } from "react-router-dom";
-import DateFnsUtils from '@date-io/date-fns';
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -30,8 +20,8 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import Payment from "./Payment.js"
 
-import { db } from '../../firebase'
-import { useAuth } from "../../context/authContext"
+import {db} from '../../firebase'
+import {useAuth} from "../../context/authContext"
 
 const styles = {
   cardCategoryWhite: {
@@ -54,11 +44,49 @@ const styles = {
     margin: "2em 1em",
     minWidth: "100%",
   },
-  element: {
-    margin: "1em 2em",
-    width: "100%",
-  },
 }
+
+const marks = [
+  {
+    value: 1,
+    label: '1 week',
+  },
+  {
+    value: 2,
+    label: '2 weeks',
+  },
+  {
+    value: 4,
+    label: '4 weeks',
+  },
+  {
+    value: 6,
+    label: '6 weeks',
+  },
+];
+
+const moneyMarks = [
+  {
+    value: 0,
+    label: '$0',
+  },
+  {
+    value: 25,
+    label: '$25',
+  },
+  {
+    value: 50,
+    label: '$50',
+  },
+  {
+    value: 75,
+    label: '$75',
+  },
+  {
+    value: 100,
+    label: '$100',
+  },
+];
 
 function moneyvaluetext(value) {
   return `${value} $`;
@@ -78,35 +106,33 @@ export default function NewChallenge() {
   const uid = currentUser ? currentUser.uid : ''
   const code = currentUserInfo ? currentUserInfo.code : ''
 
-  const [repValue, setRepValue] = useState(15);
-  const [moneyValue, setMoneyValue] = useState(0);
-  const [selectedStartDate, setStartDate] = useState(new Date());
-  const [selectedEndDate, setEndDate] = useState(new Date(Date.now() + 12096e5));
-  const today = new Date();
+  const [repValue, setRepValue] = useState(15)
+  const [moneyValue, setMoneyValue] = useState(0) 
+  const [lengthValue, setLengthValue] = useState(14) 
 
   const togglePayment = () => {
-    setShowPayment(!showPayment);
-    setMoneyValue(0);
+    setShowPayment(!showPayment)
+    setMoneyValue(0)
   }
 
   function fetchUserFrienList(uid) {
-    if (uid)
+    if(uid)
       db.collection("USERS").doc(uid).collection('FRIENDS')
-        .get()
-        .then(function (querySnapshot) {
+      .get()
+      .then(function(querySnapshot) {
           querySnapshot.forEach((doc) => {
-            setCurrentUserFriends(friend => [...friend, doc.data()])
+              setCurrentUserFriends(friend => [...friend, doc.data()])
           })
-        })
-        .catch(function (error) {
-          console.log("Error getting friends: ", error);
-        });
-
+      })
+      .catch(function(error) {
+        console.log("Error getting friends: ", error);
+      });
+  
   }
-
+  
   const filteredFriends = () => {
     return currentUserFriends.filter((arr, index, self) =>
-      index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
+    index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
   };
 
   const handleRepChange = (event, newValue) => {
@@ -117,12 +143,31 @@ export default function NewChallenge() {
     setMoneyValue(newValue);
   };
 
-  const handleStartDateChange = (event, newValue) => {
-    setStartDate(newValue);
-  };
-
-  const handleEndDateChange = (event, newValue) => {
-    setEndDate(newValue);
+  const handleLengthChange = (event, newValue) => {
+    let days;
+    switch (newValue) {
+      case 1:
+        days = 7;
+        break;
+      case 2:
+        days = 14;
+        break;
+      case 3:
+        days = 21;
+        break;
+      case 4:
+        days = 28;
+        break;
+      case 5:
+        days = 35;
+        break;
+      case 6:
+        days = 42;
+        break;
+      default:
+        break;
+    }
+    setLengthValue(days);
   };
 
   useEffect(() => {
@@ -134,10 +179,10 @@ export default function NewChallenge() {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={6} style={{ margin: "auto" }}>
+        <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Create a new challenge!</h4>
+              <h4 className={classes.cardTitleWhite}>Start a Challenge</h4>
               <p className={classes.cardCategoryWhite}>Hit your daily goals with a friend.</p>
             </CardHeader>
             <Formik
@@ -145,7 +190,8 @@ export default function NewChallenge() {
                 challengeName: '',
                 friend: '',
                 description: '',
-                exercise: 'Jumping Jacks',
+                exercise: 'Pushup',
+                length: '',
                 repetitionGoal: '',
                 addPayment: false,
                 moneyAmount: '',
@@ -168,18 +214,23 @@ export default function NewChallenge() {
               }}
 
               onSubmit={(values, { setSubmitting }) => {
-                const { challengeName, friend, description, exercise } = values;
-                console.log(selectedStartDate);
+                const { challengeName, friend, description, exercise, length, repetitionGoal, moneyAmount, status } = values;
+
+                const startDate = new Date()
+                const endDate = new Date()
+                endDate.setDate(startDate.getDate() + lengthValue)
+        
                 db.collection("CHALLENGES")
                   .doc()
                   .set({
                     owner: code,
-                    startDate: selectedStartDate,
-                    endDate: selectedEndDate,
+                    startDate: startDate,
+                    endDate: endDate,
                     challengeName: challengeName,
-                    participants: [code, friend],
+                    participants:[code,friend],
                     description: description,
                     exercise: exercise,
+                    length: lengthValue,
                     repetitionGoal: repValue,
                     moneyAmount: moneyValue,
                     isComplete: false,
@@ -197,139 +248,115 @@ export default function NewChallenge() {
             >
               {({ submitForm, isSubmitting }) => (
                 <>
-                  <CardBody style={{ padding: "3em 5em" }}>
+                  <CardBody>
                     <GridContainer>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <Field
+                          component={TextField}
+                          name="challengeName"
+                          type="input"
+                          label="Challenge Name"
+                          style={{ margin: '2em' }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
+                      <InputLabel>Friends</InputLabel>
                       <Field
-                        className={classes.element}
-                        component={TextField}
-                        name="challengeName"
-                        type="input"
-                        label="Challenge Name *"
-                        variant="outlined"
-                      />
-                      <Field
-                        className={classes.element}
-                        component={TextField}
-                        rows={2}
-                        multiline
-                        name="description"
-                        type="input"
-                        label="Challenge Description"
-                        variant="outlined"
-                      />
-                      <div className={classes.element} style={{ display: "flex", justifyContent: "center" }}>
-                        <FormControl variant="outlined" style={{ margin: "auto", width: "48%" }}>
-                          <InputLabel style={{ backgroundColor: "white" }} id="friends-label">Your Friend *</InputLabel>
-                          <Select
-                            key="Confirmation Code"
-                            labelId="friends-label"
-                            component={Select}
-                            name="friend"
-                            style={{ minWidth: '10em' }}
-                            defaultValue=""
-                          >
-                            {filteredFriends().map((item, index) =>
-                              <MenuItem defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
+                          component={Select}
+                          name="friend"
+                          style={{ minWidth: '10em' }}
+                          defaultValue = "" 
+                        >
+                          {filteredFriends().map((item, index) =>
+                                <MenuItem  defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
                             )}
-                          </Select>
-                        </FormControl>
-
-                        <FormControl variant="outlined" style={{ margin: "auto", width: "48%" }}>
-                          <InputLabel style={{ backgroundColor: "white" }} id="exercise-label">Exercise *</InputLabel>
-                          <Select
-                            labelId="exercise-label"
-                            name="exercise"
-                            style={{ minWidth: '10em' }}
-                          >
-                            <MenuItem value={"Pushup"}>Pushup</MenuItem>
-                            <MenuItem value={"Situps"}>Situps</MenuItem>
-                            <MenuItem selected value={"Pullups"}>Pullups</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </div>
-                      <div className={classes.element} style={{ display: "flex", justifyContent: "center" }}>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                          <KeyboardDatePicker
-                            style={{ margin: "auto", width: "48%" }}
-                            name="startDate"
-                            minDate={today}
-                            disableToolbar
-                            variant="inline"
-                            format="MM/dd/yyyy"
-                            margin="normal"
-                            label="Start Date *"
-                            value={selectedStartDate}
-                            onChange={handleStartDateChange}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date',
-                            }}
-                            inputVariant="outlined"
-                          />
-                          <KeyboardDatePicker
-                            style={{ margin: "auto", width: "48%" }}
-                            name="endDate"
-                            minDate={today}
-                            disableToolbar
-                            variant="inline"
-                            format="MM/dd/yyyy"
-                            margin="normal"
-                            label="End Date *"
-                            value={selectedEndDate}
-                            onChange={handleEndDateChange}
-                            KeyboardButtonProps={{
-                              'aria-label': 'change date',
-                            }}
-                            inputVariant="outlined"
-                          />
-                        </MuiPickersUtilsProvider>
-                      </div>
-
-                      <NumberField
-                        className={classes.element}
-                        name="repetitionGoal"
-                        id="filled-number"
-                        label="Repetitions per Day *"
-                        type="number"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        InputProps={{ inputProps: { min: 0 } }}
-                        onChange={handleRepChange}
-                        value={repValue}
-                        defaultValue={25}
-                        variant="outlined"
-                      />
-
-                      <Field
-                        style={{ margin: "1em 0.5em 0 1.5em" }}
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name="checked"
-                        color="primary"
-                        checked={showPayment}
-                        onChange={togglePayment}
-                        Label={{ label: 'I would like to stake money in the challenge' }}
-                      >
-                      </Field>
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <Field
+                          component={TextField}
+                          name="description"
+                          type="input"
+                          label="Challenge Description"
+                          style={{ margin: '2em' }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5} style={{ margin: '2em' }}>
+                        <InputLabel>Exercise</InputLabel>
+                        <Field
+                          component={Select}
+                          name="exercise"
+                          style={{ minWidth: '10em' }}
+                        >
+                          <MenuItem value={"Pushup"}>Pushup</MenuItem>
+                          <MenuItem value={"Situps"}>Situps</MenuItem>
+                          <MenuItem selected value={"Pullups"}>Pullups</MenuItem>
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <InputLabel>Length</InputLabel>
+                        <Field
+                          component={Slider}
+                          name="length"
+                          defaultValue={2}
+                          step={1}
+                          marks={marks}
+                          valueLabelDisplay="auto"
+                          onChange={handleLengthChange}
+                          min={1}
+                          max={6}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={5}>
+                        <InputLabel>Repetitions per Day</InputLabel>
+                        <Field
+                          component={Slider}
+                          name="repetitionGoal"
+                          defaultValue={15}
+                          value={repValue}
+                          aria-labelledby="discrete-slider-always"
+                          onChange={handleRepChange}
+                          step={1}
+                          valueLabelDisplay="on"
+                          min={1}
+                          max={200}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Field
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          name="checked"
+                          checked={showPayment}
+                          onChange={togglePayment}
+                          Label={{ label: 'I would like to stake money in the challenge' }}
+                          style={{ margin: '2em' }}
+                        >
+                        </Field>
+                      </GridItem>
                       {showPayment &&
                         <>
-                          <GridItem xs={12} sm={12} md={12} style={{ margin: "1em auto" }}>
-                            <h3>Payment</h3>
-                            <NumberField
-                              className={classes.element}
-                              label="Amount of Money ($CAD)"
-                              type="number"
-                            InputProps={{ inputProps: { min: 0 } }}
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              onChange={handleMoneyChange}
+                          <GridItem xs={12} sm={12} md={7} style={{ margin: "1em auto" }}>
+                            <InputLabel>Amount of Money to Stake ($CAD)</InputLabel>
+                            <Field
+                              component={Slider}
+                              defaultValue={0}
                               value={moneyValue}
-                              defaultValue={25}
-                              variant="outlined"
-                            />
+                              step={1}
+                              onChange={handleMoneyChange}
+                              marks={moneyMarks}
+                              valueLabelDisplay='on'
+                              min={1}
+                              max={100}
+                              style={{ margin: '2em' }}
+                            >
+                            </Field>
                           </GridItem>
-                          <GridItem xs={12} sm={12} md={12} style={{ margin: "auto" }}>
+                          <GridItem xs={12} sm={12} md={7} style={{ margin: "auto" }}>
                             <Payment />
                           </GridItem>
                         </>

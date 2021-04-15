@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import React from "react";
-import {useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,58 +18,41 @@ import styles from "assets/jss/material-dashboard-react/views/iconsStyle.js";
 import CustomCarousel from 'components/Carousel/CustomCarousel';
 
 //db
-import {useAuth} from "context/authContext.js"
-import {db} from "../../firebase"
+import { useAuth } from "context/authContext.js"
+import { db } from "../../firebase"
 
 
 const useStyles = makeStyles(styles);
 
-
-
-
-
-
 export default function Challenges() {
   const classes = useStyles();
-  const {currentUser, currentUserInfo} = useAuth()
+  const { currentUser, currentUserInfo } = useAuth()
   const userID = currentUserInfo ? currentUserInfo.code : ''
   const [userPastChallenges, setPastChallenges] = useState([])
-  const dummyData = [
-    {
-      id: 0,
-      challengeName: 'Exercising with my Pals',
-      quickStats: 'Completed 25 sit-ups a day for 10 days.'
-    }, {
-      id: 1,
-      challengeName: 'My First Challenge!',
-      quickStats: 'Completed 5 push-ups a day for 30 days.'
-    },
-  ];
- 
 
   const fetchPastChallenges = () => {
     console.log(userID)
     let query = db.collection("CHALLENGES")
-    query = query.where('participants', "array-contains",userID)
+    query = query.where('participants', "array-contains", userID)
     query = query.where("isComplete", "==", true)
-        query.get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                setPastChallenges(userChallenges => [...userChallenges, doc.data()]);
-                console.log(doc.data())
-            });
-            
-        })
-        .catch((error) => {
-            console.log("Error getting documents: ", error);
+    query.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setPastChallenges(userChallenges => [...userChallenges, doc.data()]);
+          console.log(doc.data())
         });
+
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
   }
-  
+
   useEffect(() => {
     fetchPastChallenges()
   }, [])
 
-  
+
   return (
     <>
       <Link id='newChallenge' to='/app/new-challenge' >

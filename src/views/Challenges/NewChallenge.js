@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
-import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
   MuiPickersUtilsProvider,
@@ -146,6 +145,12 @@ export default function NewChallenge() {
                 if (!values.exercise) {
                   errors.exercise = "Required";
                 }
+                if (values.repetitionGoal < 1) {
+                  errors.repetitionGoal = "Minimum 1";
+                }
+                if (values.moneyAmount < 0) {
+                  errors.moneyAmount = "Cannot be negative";
+                }
 
                 return errors;
               }}
@@ -154,7 +159,7 @@ export default function NewChallenge() {
                 let { challengeName, friend, description, exercise, repetitionGoal, moneyAmount, addPayment } = values;
 
 
-                if (!addPayment) {
+                if (!showPayment) {
                   console.log(moneyAmount);
                   moneyAmount = 0;
                 }
@@ -279,6 +284,7 @@ export default function NewChallenge() {
                         component={TextField}
                         name="repetitionGoal"
                         type="number"
+                        InputProps={{ inputProps: { min: 0 } }}
                         label="Repetitions per Day"
                         variant="outlined"
                       />
@@ -302,7 +308,8 @@ export default function NewChallenge() {
                               variant="outlined"
                               type="number"
                               name="moneyAmount"
-                            style={{ width: "100%"}}
+                              InputProps={{ inputProps: { min: 0 } }}
+                              style={{ width: "100%" }}
                             />
                           </GridItem>
                           <GridItem xs={12} sm={12} md={12} style={{ display: "flex", justifyContent: "center" }}>

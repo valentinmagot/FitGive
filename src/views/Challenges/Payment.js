@@ -35,7 +35,7 @@ export default class PaymentForm extends React.Component {
                         number={this.state.number}
                     />
                 </div>
-                <form style={{ width: '15em' }}>
+                <form style={{ width: '15em', margin: "3em" }}>
                     <TextField
                         type="tel"
                         name="number"

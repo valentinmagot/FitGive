@@ -3,19 +3,13 @@ import React, { useState, useEffect } from 'react';
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
-import Slider from '@material-ui/core/Slider';
 import MenuItem from '@material-ui/core/MenuItem';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-
-import { default as NumberField } from '@material-ui/core/TextField';
-
 import { Formik, Field } from "formik";
-import { TextField, CheckboxWithLabel } from "formik-material-ui";
+import { TextField, Select, CheckboxWithLabel } from "formik-material-ui";
 import { useHistory } from "react-router-dom";
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -74,19 +68,15 @@ export default function NewChallenge() {
   const [showPayment, setShowPayment] = React.useState(false);
   const [loading, setLoading] = useState(false)
   const [currentUserFriends, setCurrentUserFriends] = useState([])
-  const [friend, setFriend] = useState()
   const uid = currentUser ? currentUser.uid : ''
   const code = currentUserInfo ? currentUserInfo.code : ''
 
-  const [repValue, setRepValue] = useState(15);
-  const [moneyValue, setMoneyValue] = useState(0);
   const [selectedStartDate, setStartDate] = useState(new Date());
   const [selectedEndDate, setEndDate] = useState(new Date(Date.now() + 12096e5));
   const today = new Date();
 
   const togglePayment = () => {
-    setShowPayment(!showPayment);
-    setMoneyValue(0);
+    setShowPayment(!showPayment)
   }
 
   function fetchUserFrienList(uid) {
@@ -109,14 +99,6 @@ export default function NewChallenge() {
       index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
   };
 
-  const handleRepChange = (event, newValue) => {
-    setRepValue(newValue);
-  };
-
-  const handleMoneyChange = (event, newValue) => {
-    setMoneyValue(newValue);
-  };
-
   const handleStartDateChange = (event, newValue) => {
     setStartDate(newValue);
   };
@@ -134,7 +116,7 @@ export default function NewChallenge() {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={6} style={{ margin: "auto" }}>
+        <GridItem xs={12} sm={12} md={8} style={{ margin: "auto" }}>
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Create a new challenge!</h4>
@@ -163,25 +145,39 @@ export default function NewChallenge() {
                 if (!values.exercise) {
                   errors.exercise = "Required";
                 }
+                if (values.repetitionGoal < 1) {
+                  errors.repetitionGoal = "Minimum 1";
+                }
+                if (values.moneyAmount < 0) {
+                  errors.moneyAmount = "Cannot be negative";
+                }
 
                 return errors;
               }}
 
               onSubmit={(values, { setSubmitting }) => {
-                const { challengeName, friend, description, exercise } = values;
-                console.log(selectedStartDate);
+                let { challengeName, friend, description, exercise, repetitionGoal, moneyAmount, addPayment } = values;
+
+
+                if (!showPayment) {
+                  console.log(moneyAmount);
+                  moneyAmount = 0;
+                }
+
+                console.log(exercise, friend, moneyAmount, repetitionGoal);
+
                 db.collection("CHALLENGES")
                   .doc()
                   .set({
                     owner: code,
-                    startDate: selectedStartDate,
-                    endDate: selectedEndDate,
+                    startDate: new Date(selectedStartDate),
+                    endDate: new Date(selectedEndDate),
                     challengeName: challengeName,
                     participants: [code, friend],
                     description: description,
                     exercise: exercise,
-                    repetitionGoal: repValue,
-                    moneyAmount: moneyValue,
+                    repetitionGoal: repetitionGoal,
+                    moneyAmount: moneyAmount,
                     isComplete: false,
                     winner: ''
                   })
@@ -218,34 +214,34 @@ export default function NewChallenge() {
                         variant="outlined"
                       />
                       <div className={classes.element} style={{ display: "flex", justifyContent: "center" }}>
-                        <FormControl variant="outlined" style={{ margin: "auto", width: "48%" }}>
-                          <InputLabel style={{ backgroundColor: "white" }} id="friends-label">Your Friend *</InputLabel>
-                          <Select
-                            key="Confirmation Code"
-                            labelId="friends-label"
+                        <div style={{ margin: "auto", width: "48%" }}>
+                          <InputLabel>Friends</InputLabel>
+                          <Field
+                            variant="outlined"
                             component={Select}
                             name="friend"
-                            style={{ minWidth: '10em' }}
+                            style={{ minWidth: '10em', width: "100%" }}
                             defaultValue=""
                           >
                             {filteredFriends().map((item, index) =>
                               <MenuItem defaultValue="" key={index ? index : ''} value={item ? item.code : ''}>{item ? item.firstname + ' ' + item.lastname : ''}</MenuItem>
                             )}
-                          </Select>
-                        </FormControl>
-
-                        <FormControl variant="outlined" style={{ margin: "auto", width: "48%" }}>
-                          <InputLabel style={{ backgroundColor: "white" }} id="exercise-label">Exercise *</InputLabel>
-                          <Select
-                            labelId="exercise-label"
+                          </Field>
+                        </div>
+                        <div style={{ margin: "auto", width: "48%" }}>
+                          <InputLabel>Exercise</InputLabel>
+                          <Field
+                            component={Select}
                             name="exercise"
-                            style={{ minWidth: '10em' }}
+                            variant="outlined"
+                            style={{ minWidth: '10em', width: "100%" }}
                           >
+                            <MenuItem value={"Jumping Jacks"}>Jumping Jacks</MenuItem>
                             <MenuItem value={"Pushup"}>Pushup</MenuItem>
                             <MenuItem value={"Situps"}>Situps</MenuItem>
-                            <MenuItem selected value={"Pullups"}>Pullups</MenuItem>
-                          </Select>
-                        </FormControl>
+                            <MenuItem value={"Pullups"}>Pullups</MenuItem>
+                          </Field>
+                        </div>
                       </div>
                       <div className={classes.element} style={{ display: "flex", justifyContent: "center" }}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -283,25 +279,17 @@ export default function NewChallenge() {
                           />
                         </MuiPickersUtilsProvider>
                       </div>
-
-                      <NumberField
+                      <Field
                         className={classes.element}
+                        component={TextField}
                         name="repetitionGoal"
-                        id="filled-number"
-                        label="Repetitions per Day *"
                         type="number"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
                         InputProps={{ inputProps: { min: 0 } }}
-                        onChange={handleRepChange}
-                        value={repValue}
-                        defaultValue={25}
+                        label="Repetitions per Day"
                         variant="outlined"
                       />
-
                       <Field
-                        style={{ margin: "1em 0.5em 0 1.5em" }}
+                        style={{ margin: "1em 1.5em" }}
                         component={CheckboxWithLabel}
                         type="checkbox"
                         name="checked"
@@ -314,22 +302,17 @@ export default function NewChallenge() {
                       {showPayment &&
                         <>
                           <GridItem xs={12} sm={12} md={12} style={{ margin: "1em auto" }}>
-                            <h3>Payment</h3>
-                            <NumberField
-                              className={classes.element}
-                              label="Amount of Money ($CAD)"
-                              type="number"
-                            InputProps={{ inputProps: { min: 0 } }}
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              onChange={handleMoneyChange}
-                              value={moneyValue}
-                              defaultValue={25}
+                            <Field
+                              component={TextField}
+                              label="Amount of Money to Stake ($CAD)"
                               variant="outlined"
+                              type="number"
+                              name="moneyAmount"
+                              InputProps={{ inputProps: { min: 0 } }}
+                              style={{ width: "100%" }}
                             />
                           </GridItem>
-                          <GridItem xs={12} sm={12} md={12} style={{ margin: "auto" }}>
+                          <GridItem xs={12} sm={12} md={12} style={{ display: "flex", justifyContent: "center" }}>
                             <Payment />
                           </GridItem>
                         </>

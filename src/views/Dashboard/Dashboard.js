@@ -48,8 +48,8 @@ export default function Dashboard() {
   const [countWon, setCountWon] = useState(0);
   const [countLost, setCountLost] = useState(0);
   const [countMoney, setCountMoney] = useState(0);
-  const [graphMoney, setGraphMoney] = useState([0,0,0,0,0,0,0,0,0,0,0,0]);
-  const [graphReps, setGraphReps] = useState([0,0,0,0,0,0,0]);
+  const [graphMoney, setGraphMoney] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const [graphReps, setGraphReps] = useState([0, 0, 0, 0, 0, 0, 0]);
 
   const [userReps, setUserReps] = useState();
   const [friendReps, setFriendReps] = useState();
@@ -128,66 +128,61 @@ export default function Dashboard() {
     let user_reps = 0
     let friend_reps = 0
     query = query.where("isComplete", "==", false)
-        query.get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const data = doc.data()
-                const endDate = data.endDate
-                const participant = doc.data().participants
-                setAmount(doc.data().moneyAmount)
-                setChallengeName(doc.data().challengeName)
-                const today = new Date()
-                let user_win;
-                // console.log(today.getDate())
-                // console.log(endDate.toDate())
-                // console.log(doc.id)
+    query.get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const data = doc.data()
+          const endDate = data.endDate
+          const participant = doc.data().participants
+          setAmount(doc.data().moneyAmount)
+          setChallengeName(doc.data().challengeName)
+          const today = new Date()
+          let user_win;
+          // console.log(today.getDate())
+          // console.log(endDate.toDate())
+          // console.log(doc.id)
 
-                if(today > endDate.toDate()){
-                  db.collection("CHALLENGES").doc(doc.id).collection('LOGS').get()
-                  .then((querySnapshot) => {
-                    querySnapshot.forEach((docu) => {
-                        if(docu.data().user == code){
-                          user_reps += docu.data().repetitions
-                          setUserReps(user_reps)
-                        }else {
-                          friend_reps += docu.data().repetitions
-                          setFriendReps(friendReps)
-                        }
+          if (today > endDate.toDate()) {
+            db.collection("CHALLENGES").doc(doc.id).collection('LOGS').get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((docu) => {
+                  if (docu.data().user == code) {
+                    user_reps += docu.data().repetitions
+                    setUserReps(user_reps)
+                  } else {
+                    friend_reps += docu.data().repetitions
+                    setFriendReps(friendReps)
+                  }
 
 
-                          if(user_reps > friend_reps){
-                            user_win = participant[0]
-                            setWinner(participant[0])
-                            setWinnerReps(user_reps)
-                            setLoser(participant[1])
-                            setLoserReps(friend_reps)
-                            setUserWon(true)
-                        }else {
-                            user_win = participant[1]
-                            setWinner(participant[1])
-                            setWinnerReps(friend_reps)
-                            setLoser(participant[0])
-                            setLoserReps(user_reps)
-                            setUserWon(false)
-                        }
+                  if (user_reps > friend_reps) {
+                    user_win = participant[0]
+                    setWinner(participant[0])
+                    setWinnerReps(user_reps)
+                    setLoser(participant[1])
+                    setLoserReps(friend_reps)
+                    setUserWon(true)
+                  } else {
+                    user_win = participant[1]
+                    setWinner(participant[1])
+                    setWinnerReps(friend_reps)
+                    setLoser(participant[0])
+                    setLoserReps(user_reps)
+                    setUserWon(false)
+                  }
 
-                        db.collection("CHALLENGES").doc(doc.id).update({isComplete: true, winner: user_win})
-                        .then(() => {
-                          handleClickOpen()
-                        })
-                        .catch((err) => {
-                          console.log(err)
-                        })
+                  db.collection("CHALLENGES").doc(doc.id).update({ isComplete: true, winner: user_win })
+                    .then(() => {
+                      handleClickOpen()
                     })
-                  })
-                 
-                }
-                
-            });
-            
-        })
-        .catch((error) => {
-            console.log("Error getting documents: ", error);
+                    .catch((err) => {
+                      console.log(err)
+                    })
+                })
+              })
+
+          }
+
         });
 
       })
@@ -294,13 +289,13 @@ export default function Dashboard() {
         <Dialog open={open} onClose={handleClose} disableBackdropClick={true}>
           <DialogTitle id="simple-dialog-title">End of challenge</DialogTitle>
           <DialogContent>
-              {userWon ? 
-              <p>Congratulations you are the winner of the challenge : {challengeName} <br/>
-              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br/>
-              {amount}$ will be donated </p> : <p>Unfortunately you lost this challenge : {challengeName}, great effort ! <br/>
-              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br/>
-              {amount}$ will be donated </p>}
-              <Button color="danger" onClick={handleClose}>Close</Button>
+            {userWon ?
+              <p>Congratulations you are the winner of the challenge : {challengeName} <br />
+              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br />
+                {amount}$ will be donated </p> : <p>Unfortunately you lost this challenge : {challengeName}, great effort ! <br />
+              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br />
+                {amount}$ will be donated </p>}
+            <Button color="danger" onClick={handleClose}>Close</Button>
           </DialogContent>
         </Dialog>
       }

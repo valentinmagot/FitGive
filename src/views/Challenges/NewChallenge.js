@@ -170,8 +170,8 @@ export default function NewChallenge() {
                   .doc()
                   .set({
                     owner: code,
-                    startDate: selectedStartDate,
-                    endDate: selectedEndDate,
+                    startDate: new Date(selectedStartDate),
+                    endDate: new Date(selectedEndDate),
                     challengeName: challengeName,
                     participants: [code, friend],
                     description: description,

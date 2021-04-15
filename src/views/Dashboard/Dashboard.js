@@ -135,7 +135,7 @@ export default function Dashboard() {
           const endDate = data.endDate
           const participant = doc.data().participants
           setAmount(doc.data().moneyAmount)
-          setChallengeName(doc.data().challengeName)
+          
           const today = new Date()
           let user_win;
           // console.log(today.getDate())
@@ -143,6 +143,7 @@ export default function Dashboard() {
           // console.log(doc.id)
 
           if (today > endDate.toDate()) {
+            setChallengeName(doc.data().challengeName)
             db.collection("CHALLENGES").doc(doc.id).collection('LOGS').get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((docu) => {

@@ -39,16 +39,19 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  const { currentUserInfo } = useAuth()
+  const { currentUserInfo, currentUser } = useAuth()
   const code = currentUserInfo ? currentUserInfo.code : ''
   const firstname = currentUserInfo ? currentUserInfo.firstname.toUpperCase() : ''
   const lastname = currentUserInfo ? currentUserInfo.lastname.toUpperCase() : ''
   const initial = currentUserInfo ? currentUserInfo.initial : ''
-  const uid = currentUserInfo ? currentUserInfo.uid : ''
+  const uid = currentUser ? currentUser.uid : ''
 
   const [open, setOpen] = useState(false);
   const [userWon, setUserWon] = useState(false);
   const [countFriends, setCountFriends] = useState(0);
+  const [countWon, setCountWon] = useState(0);
+  const [countLost, setCountLost] = useState(0);
+  const [countMoney, setCountMoney] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -56,26 +59,25 @@ export default function Dashboard() {
 
   const handleClose = () => {
     setOpen(false);
-    // setCurrentPatient("");
-    // retrieveRequests();
   };
-  // const getStats = () => {
-  //   let query = db.collection("USERS")
 
-
-  // }
-  const retrieveFriends = () => {
-    if (currentUserInfo) {
-      // db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
-      //   setCountFriends(snap.size);
-      // });
-      db.collection("USERS").doc(uid).collection('FRIENDS')
+  const getStats = () => {
+    if (currentUser) {
+      db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
+        setCountFriends(snap.size);
+      })
+      db.collection("USERS").doc(uid)
         .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach((doc) => {
-            console.log(doc);
-          })
+        .then(function (doc) {
+          if (doc.data().statMoney) {
+            setCountLost(doc.data().statLost)
+            setCountWon(doc.data().statWon)
+            setCountMoney(doc.data().statMoney)
+          }
         })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+        });
     }
   }
 
@@ -121,25 +123,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     isChallengeComplete();
-    console.log()
-    if (currentUserInfo) {
-      db.collection("USERS").doc(uid).onSnapshot((snapshot) => {
-        console.log(snapshot.docs)
-        // setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
-      });
-    }
-    if (currentUserInfo) {
-      // db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
-      //   setCountFriends(snap.size);
-      // });
-      db.collection("USERS").doc(uid).collection('FRIENDS')
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach((doc) => {
-            console.log(doc);
-          })
-        })
-    }
+    getStats();
   }, [])
 
   return (
@@ -158,7 +142,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={6} md={3}>
           <StatCard
             cardTitle='Challenges Won'
-            cardStat='2'
+            cardStat={countWon}
             cardLink='see details'
             cardIcon='emoji_events'
             cardHeader='warning'
@@ -169,7 +153,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={6} md={3}>
           <StatCard
             cardTitle='Challenges Lost'
-            cardStat='0'
+            cardStat={countLost}
             cardLink='see details'
             cardIcon='cancel'
             cardHeader='danger'
@@ -179,7 +163,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={6} md={3}>
           <StatCard
             cardTitle='Money Pledged'
-            cardStat='20$'
+            cardStat={countMoney + '$'}
             cardLink='just updated'
             cardIcon='local_atm'
             cardHeader='success'
@@ -190,7 +174,7 @@ export default function Dashboard() {
         <GridItem xs={12} sm={6} md={3}>
           <StatCard
             cardTitle='Friends'
-            cardStat={countFriends}
+            cardStat={countFriends <= 0 ? 0 : countFriends - 1}
             cardLink='just updated'
             cardIcon='accessibility'
             cardHeader='info'

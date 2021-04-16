@@ -42,9 +42,7 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
 
                 onSubmit={(values, { setSubmitting }) => {
                     const { challengeName, logdate, repetitions } = values;
-                    console.log(logdate.toString())
                     const day = code + '-' + logdate.getFullYear() + '-' + (logdate.getMonth() + 1) + '-' + logdate.getDate();
-                    console.log(id)
                     db.collection("CHALLENGES")
                         .doc(id)
                         .collection("LOGS")

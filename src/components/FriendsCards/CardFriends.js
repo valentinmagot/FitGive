@@ -135,8 +135,6 @@ export default function CardFriends(props) {
         }
            
      })
-      console.log(u)
-      console.log(f)
       if(code == ''){
         setStatus('')
         return setError('Please enter a valid code')
@@ -146,13 +144,11 @@ export default function CardFriends(props) {
         return setError("Cannot add yourself as friend")
       }
       if(f) {
-        console.log('user is friend')
         setStatus('')
         return setError('User is already in friend list')
         
       }
       if(u == false){
-        console.log('user is undifined')
         setStatus('')
         return setError('User is not in the system')
 

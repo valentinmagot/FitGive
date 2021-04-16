@@ -102,21 +102,6 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-// function myFunction() {
-//   /* Get the text field */
-//   var copyText = document.getElementById('inputId');
-
-//   /* Select the text field */
-//   copyText.select();
-//   copyText.setSelectionRange(0, 99999); /* For mobile devices */
-
-//   /* Copy the text inside the text field */
-//   document.execCommand("copy");
-
-//   /* Alert the copied text */
-//   console.log("Copied the text: " + copyText.value);
-// }
-
 export default function CardFriendsText(props) {
 
   const classes = useStyles();
@@ -131,7 +116,6 @@ export default function CardFriendsText(props) {
       setStatus('')
       setError('')
       const el = textRef.current
-      console.log(el)
       el.select()
       document.execCommand("copy")
       setCopied(true)

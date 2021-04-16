@@ -31,7 +31,6 @@ export default function Challenges() {
   const [userPastChallenges, setPastChallenges] = useState([])
 
   const fetchPastChallenges = () => {
-    console.log(userID)
     let query = db.collection("CHALLENGES")
     query = query.where('participants', "array-contains", userID)
     query = query.where("isComplete", "==", true)
@@ -39,7 +38,6 @@ export default function Challenges() {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setPastChallenges(userChallenges => [...userChallenges, doc.data()]);
-          console.log(doc.data())
         });
 
       })

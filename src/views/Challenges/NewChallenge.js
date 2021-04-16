@@ -160,11 +160,9 @@ export default function NewChallenge() {
 
 
                 if (!showPayment) {
-                  console.log(moneyAmount);
                   moneyAmount = 0;
                 }
 
-                console.log(exercise, friend, moneyAmount, repetitionGoal);
 
                 db.collection("CHALLENGES")
                   .doc()

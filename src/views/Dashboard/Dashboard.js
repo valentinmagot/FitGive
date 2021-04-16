@@ -61,8 +61,6 @@ export default function Dashboard() {
   const [challengeName, setChallengeName] = useState();
 
   const handleClickOpen = () => {
-    console.log(winnerReps)
-    console.log(loserReps)
     setOpen(true);
   };
 
@@ -139,9 +137,6 @@ export default function Dashboard() {
           
           const today = new Date()
           let user_win;
-          // console.log(today.getDate())
-          // console.log(endDate.toDate())
-          // console.log(doc.id)
 
           if (today > endDate.toDate()) {
             setChallengeName(doc.data().challengeName)
@@ -156,13 +151,8 @@ export default function Dashboard() {
                     friend_reps += docu.data().repetitions
                     setFriendReps(friend_reps)
                   }
-
-                  console.log(user_reps)
-                  console.log(friend_reps)
-                  console.log(isLoggedInUser)
                   if(isLoggedInUser){
                     if (user_reps > friend_reps) {
-                      console.log("I am the owner and I won")
                       user_win = participant[0]
                       setWinner(participant[0])
                       setWinnerReps(user_reps)
@@ -170,7 +160,6 @@ export default function Dashboard() {
                       setLoserReps(friend_reps)
                       setUserWon(true)
                     } else {
-                      console.log("I am the owner and I lost")
                       user_win = participant[1]
                       setWinner(participant[1])
                       setWinnerReps(friend_reps)
@@ -180,7 +169,6 @@ export default function Dashboard() {
                     }
                   }else {
                     if (user_reps > friend_reps) {
-                      console.log("I am not the owner and I won")
                       user_win = participant[1]
                       setWinner(participant[1])
                       setWinnerReps(user_reps)
@@ -188,7 +176,6 @@ export default function Dashboard() {
                       setLoserReps(friend_reps)
                       setUserWon(true)
                     } else {
-                      console.log("I am not the owner and I lost")
                       user_win = participant[0]
                       setWinner(participant[0])
                       setWinnerReps(friend_reps)

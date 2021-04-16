@@ -19,9 +19,6 @@ function CommentInput({ comments, id, user }) {
             .update({
                 comments: commentMap,
             })
-            .then(function () {
-                console.log("Document successfully written!");
-            })
             .catch(function (error) {
                 console.error("Error writing document: ", error);
             });

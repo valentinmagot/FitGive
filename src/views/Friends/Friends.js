@@ -203,8 +203,7 @@ export default function Friends() {
   function deleteFriend(friend_code, uid) {
     setError("")
     if(uid && friend_code){
-      //console.log(uid)
-      //console.log(friend_code)
+      
       db.collection("USERS").doc(uid).collection('FRIENDS').where('code', '==', friend_code)
       .get()
       .then(function(querySnapshot) {
@@ -222,7 +221,7 @@ export default function Friends() {
       .catch(function(error) {
         setStatus('')
         setError('Error deleting friends')
-        //console.log("Error deleting friends: ", error);
+        
       });
      }
 
@@ -234,7 +233,7 @@ export default function Friends() {
       setStatus('')
       setError('')
       const el = textRef.current
-      console.log(el)
+      
       el.select()
       document.execCommand("copy")
       setCopied(true)
@@ -305,8 +304,7 @@ async function handleSubmit(e) {
       }
          
    })
-    console.log(u)
-    console.log(f)
+    
     if(code == ''){
       setStatus('')
       return setError('Please enter a valid code')
@@ -316,13 +314,13 @@ async function handleSubmit(e) {
       return setError("Cannot add yourself as friend")
     }
     if(f) {
-      console.log('user is friend')
+      
       setStatus('')
       return setError('User is already in friend list')
       
     }
     if(u == false){
-      console.log('user is undifined')
+      
       setStatus('')
       return setError('User is not in the system')
 
@@ -330,7 +328,7 @@ async function handleSubmit(e) {
     if(f == false && u && code){
         const friendData = users.filter((arr, index, self) =>
         index === self.findIndex((t) => (t.code === code)))
-        //console.log(friendData[0])
+        
 
             db.collection('USERS').doc(uid).collection('FRIENDS').doc().set({
               code: friendData[0].code,

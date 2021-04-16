@@ -127,6 +127,7 @@ export default function Dashboard() {
     let query = db.collection("CHALLENGES")
     let user_reps = 0
     let friend_reps = 0
+    query = query.where('participants', "array-contains", code)
     query = query.where("isComplete", "==", false)
     query.get()
       .then((querySnapshot) => {
@@ -144,6 +145,7 @@ export default function Dashboard() {
 
           if (today > endDate.toDate()) {
             setChallengeName(doc.data().challengeName)
+            let isLoggedInUser = doc.data().owner == code ? true : false
             db.collection("CHALLENGES").doc(doc.id).collection('LOGS').get()
               .then((querySnapshot) => {
                 querySnapshot.forEach((docu) => {
@@ -152,25 +154,50 @@ export default function Dashboard() {
                     setUserReps(user_reps)
                   } else {
                     friend_reps += docu.data().repetitions
-                    setFriendReps(friendReps)
+                    setFriendReps(friend_reps)
                   }
 
-
-                  if (user_reps > friend_reps) {
-                    user_win = participant[0]
-                    setWinner(participant[0])
-                    setWinnerReps(user_reps)
-                    setLoser(participant[1])
-                    setLoserReps(friend_reps)
-                    setUserWon(true)
-                  } else {
-                    user_win = participant[1]
-                    setWinner(participant[1])
-                    setWinnerReps(friend_reps)
-                    setLoser(participant[0])
-                    setLoserReps(user_reps)
-                    setUserWon(false)
+                  console.log(user_reps)
+                  console.log(friend_reps)
+                  console.log(isLoggedInUser)
+                  if(isLoggedInUser){
+                    if (user_reps > friend_reps) {
+                      console.log("I am the owner and I won")
+                      user_win = participant[0]
+                      setWinner(participant[0])
+                      setWinnerReps(user_reps)
+                      setLoser(participant[1])
+                      setLoserReps(friend_reps)
+                      setUserWon(true)
+                    } else {
+                      console.log("I am the owner and I lost")
+                      user_win = participant[1]
+                      setWinner(participant[1])
+                      setWinnerReps(friend_reps)
+                      setLoser(participant[0])
+                      setLoserReps(user_reps)
+                      setUserWon(false)
+                    }
+                  }else {
+                    if (user_reps > friend_reps) {
+                      console.log("I am not the owner and I won")
+                      user_win = participant[1]
+                      setWinner(participant[1])
+                      setWinnerReps(user_reps)
+                      setLoser(participant[0])
+                      setLoserReps(friend_reps)
+                      setUserWon(true)
+                    } else {
+                      console.log("I am not the owner and I lost")
+                      user_win = participant[0]
+                      setWinner(participant[0])
+                      setWinnerReps(friend_reps)
+                      setLoser(participant[1])
+                      setLoserReps(user_reps)
+                      setUserWon(false)
+                    }
                   }
+                  
 
                   db.collection("CHALLENGES").doc(doc.id).update({ isComplete: true, winner: user_win })
                     .then(() => {
@@ -266,6 +293,7 @@ export default function Dashboard() {
             cardVariableOptions={caloriesBunedChart.option}
             cardVariableResponsiveOptions={caloriesBunedChart.responsiveOptions}
             cardVariableAnimation={caloriesBunedChart.animation}
+
           />
 
         </GridItem>
@@ -281,6 +309,7 @@ export default function Dashboard() {
             cardVariableOptions={moneyGeneratedChart.option}
             cardVariableResponsiveOptions={moneyGeneratedChart.responsiveOptions}
             cardVariableAnimation={moneyGeneratedChart.animation}
+
           />
         </GridItem>
       </GridContainer>
@@ -288,12 +317,9 @@ export default function Dashboard() {
         <Dialog open={open} onClose={handleClose} disableBackdropClick={true}>
           <DialogTitle id="simple-dialog-title">End of challenge</DialogTitle>
           <DialogContent>
-            {userWon ?
-              <p>Congratulations you are the winner of the challenge : {challengeName} <br />
-              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br />
-                {amount}$ will be donated </p> : <p>Unfortunately you lost this challenge : {challengeName}, great effort ! <br />
-              The total reps performed are : {winner} - {winnerReps} vs {loser} - {loserReps} <br />
-                {amount}$ will be donated </p>}
+              <p>The challenge  : {challengeName} is now finished. <br />
+              The total reps performed are :  {winnerReps} vs  {loserReps} <br />
+                {amount}$ will be donated. </p> 
             <Button color="danger" onClick={handleClose}>Close</Button>
           </DialogContent>
         </Dialog>

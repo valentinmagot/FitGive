@@ -26,7 +26,7 @@ export default function ProfileCard(props) {
           />
         </CardAvatar>
         <CardBody profile>
-          <h6 className={classes.cardCategory}>{props.userCode}</h6>
+          <p className={classes.cardCategory}>{props.userCode}</p>
           <h4 className='user-name'>{props.userFirstName} {props.userLastName}</h4>
           {/* <Divider />
           <p className={classes.description}>{props.userBio}</p>

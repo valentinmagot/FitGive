@@ -265,7 +265,6 @@ export default function Dashboard() {
             cardVariableOptions={caloriesBunedChart.option}
             cardVariableResponsiveOptions={caloriesBunedChart.responsiveOptions}
             cardVariableAnimation={caloriesBunedChart.animation}
-
           />
 
         </GridItem>
@@ -281,7 +280,6 @@ export default function Dashboard() {
             cardVariableOptions={moneyGeneratedChart.option}
             cardVariableResponsiveOptions={moneyGeneratedChart.responsiveOptions}
             cardVariableAnimation={moneyGeneratedChart.animation}
-
           />
         </GridItem>
       </GridContainer>

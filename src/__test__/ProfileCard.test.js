@@ -47,7 +47,7 @@ describe("ProfileCard component testing", () => {
   });
   
   test('ProfileCard user code should render', () => {
-    expect(wrapper.find('h6').text()).toContain(props.userCode)
+    expect(wrapper.find('p').text()).toContain(props.userCode)
   });
 
   test('ProfileCard user name should render', () => {

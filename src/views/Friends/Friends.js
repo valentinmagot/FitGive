@@ -200,6 +200,12 @@ export default function Friends() {
   const [currentUserFriends, setCurrentUserFriends] = useState([])
   const uid = currentUser ? currentUser.uid : ''
 
+  /**
+   * Deletes the user friend from his friend list.
+   *
+   * @param {string} friend_code The friend identifier.
+   * @param {string} uid The user identifier.
+   */
   function deleteFriend(friend_code, uid) {
     setError("")
     if(uid && friend_code){
@@ -225,8 +231,13 @@ export default function Friends() {
       });
      }
 
-}
+  }
 
+  /**
+   * Copy the user code.
+   *
+   * @param {Object} e The event triggered.
+   */
   function copyCodeToClipboard(e){
     e.preventDefault()
     try {
@@ -245,6 +256,11 @@ export default function Friends() {
     }
     
   }
+
+  /**
+   * Gets all the users in the system.
+   *
+   */
   function fetchSystemUsers() {
     db.collection('USERS')
         .get()
@@ -258,9 +274,14 @@ export default function Friends() {
           setError('Failed to get users', error)
         })
 
-}
+  }
 
-function fetchUserFrienList(uid) {
+  /**
+   * Gets all the friends of the logged in user in the system.
+   *
+   * @param {string} uid The user identifier.
+   */
+  function fetchUserFrienList(uid) {
   if(uid)
     db.collection("USERS").doc(uid).collection('FRIENDS')
     .get()
@@ -274,14 +295,24 @@ function fetchUserFrienList(uid) {
       setError("Error getting friends: ", error);
     });
 
-}
+  }
 
-const filteredFriends = () => {
+   /**
+   * Gets all the friends of the logged in user in the system.
+   * 
+   * @returns {Map}  user friend list without duplicates.
+   */
+  const filteredFriends = () => {
   return currentUserFriends.filter((arr, index, self) =>
   index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
-};
+  };
 
-async function handleSubmit(e) {
+  /**
+   * Add friends to the user friend list.
+   * 
+   * @param {Object} e The event triggered..
+   */
+  async function handleSubmit(e) {
      e.preventDefault()
      const code = codeRef.current.value
     setLoading(true)

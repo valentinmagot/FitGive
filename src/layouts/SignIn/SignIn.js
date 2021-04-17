@@ -48,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
+/**
+   * Sets the copyright at the bottom of the form
+   */
 function Copyright() {
   const classes = useStyles();
   return (
@@ -71,6 +75,11 @@ export default function Signin() {
   const [loading, setLoading] = useState(false)
   const history = useHistory()
   
+  /**
+   * Sign the user in the application.
+   *
+   * @param {Object} e The event triggered.
+   */
   async function handleSubmit(e) {
     e.preventDefault()
 

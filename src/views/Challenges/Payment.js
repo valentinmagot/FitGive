@@ -13,10 +13,20 @@ export default class PaymentForm extends React.Component {
         number: '',
     };
 
+     /**
+     * Manages input focus
+     *
+     * @param {Object} e The event triggered.
+     */
     handleInputFocus = (e) => {
         this.setState({ focus: e.target.name });
     }
 
+    /**
+     * Manages input change
+     *
+     * @param {Object} e The event triggered.
+     */
     handleInputChange = (e) => {
         const { name, value } = e.target;
 

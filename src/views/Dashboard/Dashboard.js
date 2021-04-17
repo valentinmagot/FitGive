@@ -60,10 +60,18 @@ export default function Dashboard() {
   const [amount, setAmount] = useState();
   const [challengeName, setChallengeName] = useState();
 
+  /**
+   * Opens the end of challenge modal window.
+   *
+   */
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  /**
+   * Closes the end of challenge modal window.
+   *
+   */
   const handleClose = () => {
     setOpen(false);
   };
@@ -98,7 +106,10 @@ export default function Dashboard() {
     series: [graphMoney]
   }
 
-
+  /**
+   * Gets user stats in order to be displayed on the dashboard cards
+   *
+   */
   const getStats = () => {
     if (currentUser) {
       db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
@@ -121,6 +132,12 @@ export default function Dashboard() {
     }
   }
 
+  /**
+   * Verifies if the user on going challenges are complited.
+   * It updates the db information if a challenge is complete and
+   * triggers the display of the end of challenge screen.
+   *
+   */
   const isChallengeComplete = () => {
     let query = db.collection("CHALLENGES")
     let user_reps = 0
@@ -206,6 +223,10 @@ export default function Dashboard() {
       });
   }
 
+  /**
+   * Triggered on DOM component render.
+   *
+   */
   useEffect(() => {
     isChallengeComplete();
     getStats();

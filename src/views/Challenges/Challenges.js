@@ -30,6 +30,10 @@ export default function Challenges() {
   const userID = currentUserInfo ? currentUserInfo.code : ''
   const [userPastChallenges, setPastChallenges] = useState([])
 
+  /**
+   * Gets all the challenges that the user already finished.
+   * 
+   */
   const fetchPastChallenges = () => {
     let query = db.collection("CHALLENGES")
     query = query.where('participants', "array-contains", userID)

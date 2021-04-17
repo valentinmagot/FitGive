@@ -28,7 +28,7 @@ function Explore({ user }) {
 
     useEffect(() => {
         db.collection("EXPLORE").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-            console.log(snapshot.docs)
+            
             setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
         });
     }, []);

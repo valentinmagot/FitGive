@@ -200,11 +200,16 @@ export default function Friends() {
   const [currentUserFriends, setCurrentUserFriends] = useState([])
   const uid = currentUser ? currentUser.uid : ''
 
+  /**
+   * Deletes the user friend from his friend list.
+   *
+   * @param {string} friend_code The friend identifier.
+   * @param {string} uid The user identifier.
+   */
   function deleteFriend(friend_code, uid) {
     setError("")
     if(uid && friend_code){
-      //console.log(uid)
-      //console.log(friend_code)
+      
       db.collection("USERS").doc(uid).collection('FRIENDS').where('code', '==', friend_code)
       .get()
       .then(function(querySnapshot) {
@@ -222,19 +227,24 @@ export default function Friends() {
       .catch(function(error) {
         setStatus('')
         setError('Error deleting friends')
-        //console.log("Error deleting friends: ", error);
+        
       });
      }
 
-}
+  }
 
+  /**
+   * Copy the user code.
+   *
+   * @param {Object} e The event triggered.
+   */
   function copyCodeToClipboard(e){
     e.preventDefault()
     try {
       setStatus('')
       setError('')
       const el = textRef.current
-      console.log(el)
+      
       el.select()
       document.execCommand("copy")
       setCopied(true)
@@ -246,6 +256,11 @@ export default function Friends() {
     }
     
   }
+
+  /**
+   * Gets all the users in the system.
+   *
+   */
   function fetchSystemUsers() {
     db.collection('USERS')
         .get()
@@ -259,9 +274,14 @@ export default function Friends() {
           setError('Failed to get users', error)
         })
 
-}
+  }
 
-function fetchUserFrienList(uid) {
+  /**
+   * Gets all the friends of the logged in user in the system.
+   *
+   * @param {string} uid The user identifier.
+   */
+  function fetchUserFrienList(uid) {
   if(uid)
     db.collection("USERS").doc(uid).collection('FRIENDS')
     .get()
@@ -275,14 +295,24 @@ function fetchUserFrienList(uid) {
       setError("Error getting friends: ", error);
     });
 
-}
+  }
 
-const filteredFriends = () => {
+   /**
+   * Gets all the friends of the logged in user in the system.
+   * 
+   * @returns {Map}  user friend list without duplicates.
+   */
+  const filteredFriends = () => {
   return currentUserFriends.filter((arr, index, self) =>
   index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
-};
+  };
 
-async function handleSubmit(e) {
+  /**
+   * Add friends to the user friend list.
+   * 
+   * @param {Object} e The event triggered..
+   */
+  async function handleSubmit(e) {
      e.preventDefault()
      const code = codeRef.current.value
     setLoading(true)
@@ -305,8 +335,7 @@ async function handleSubmit(e) {
       }
          
    })
-    console.log(u)
-    console.log(f)
+    
     if(code == ''){
       setStatus('')
       return setError('Please enter a valid code')
@@ -316,13 +345,13 @@ async function handleSubmit(e) {
       return setError("Cannot add yourself as friend")
     }
     if(f) {
-      console.log('user is friend')
+      
       setStatus('')
       return setError('User is already in friend list')
       
     }
     if(u == false){
-      console.log('user is undifined')
+      
       setStatus('')
       return setError('User is not in the system')
 
@@ -330,7 +359,7 @@ async function handleSubmit(e) {
     if(f == false && u && code){
         const friendData = users.filter((arr, index, self) =>
         index === self.findIndex((t) => (t.code === code)))
-        //console.log(friendData[0])
+        
 
             db.collection('USERS').doc(uid).collection('FRIENDS').doc().set({
               code: friendData[0].code,

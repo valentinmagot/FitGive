@@ -54,10 +54,6 @@ const styles = {
   },
 }
 
-function moneyvaluetext(value) {
-  return `${value} $`;
-}
-
 const useStyles = makeStyles(styles);
 
 export default function NewChallenge() {
@@ -79,6 +75,11 @@ export default function NewChallenge() {
     setShowPayment(!showPayment)
   }
 
+  /**
+   * Gets all the friends of the logged in user in the system.
+   *
+   * @param {string} uid The user identifier.
+   */
   function fetchUserFrienList(uid) {
     if (uid)
       db.collection("USERS").doc(uid).collection('FRIENDS')
@@ -94,15 +95,32 @@ export default function NewChallenge() {
 
   }
 
+  /**
+   * Gets all the friends of the logged in user in the system.
+   * 
+   * @returns {Map}  user friend list without duplicates.
+   */
   const filteredFriends = () => {
     return currentUserFriends.filter((arr, index, self) =>
       index === self.findIndex((t) => (t.code === arr.code && t.code !== code)))
   };
 
+  /**
+   * Manages the start of challenge date.
+   * 
+   * @param {Object} event The event triggered.
+   * @param {date} newValue The new date to save.
+   */
   const handleStartDateChange = (event, newValue) => {
     setStartDate(newValue);
   };
 
+  /**
+   * Manages the end of challenge date.
+   * 
+   * @param {Object} event The event triggered.
+   * @param {date} newValue The new date to save.
+   */
   const handleEndDateChange = (event, newValue) => {
     setEndDate(newValue);
   };
@@ -123,6 +141,10 @@ export default function NewChallenge() {
               <p className={classes.cardCategoryWhite}>Hit your daily goals with a friend.</p>
             </CardHeader>
             <Formik
+            /**
+             * initialize the initial value of the form.
+             * 
+             */
               initialValues={{
                 challengeName: '',
                 friend: '',
@@ -132,7 +154,12 @@ export default function NewChallenge() {
                 addPayment: false,
                 moneyAmount: '',
               }}
-
+              
+              /**
+               * Verifies that all required values are captured.
+               * 
+               * @param {string} values The values of each fields.
+               */
               validate={(values) => {
                 const errors = {};
 
@@ -154,17 +181,20 @@ export default function NewChallenge() {
 
                 return errors;
               }}
-
+              
+              /**
+               * Writes the new challenge information to the database.
+               * 
+               * @param {string} values The values of each fields.
+               */
               onSubmit={(values, { setSubmitting }) => {
                 let { challengeName, friend, description, exercise, repetitionGoal, moneyAmount, addPayment } = values;
 
 
                 if (!showPayment) {
-                  console.log(moneyAmount);
                   moneyAmount = 0;
                 }
 
-                console.log(exercise, friend, moneyAmount, repetitionGoal);
 
                 db.collection("CHALLENGES")
                   .doc()

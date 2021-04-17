@@ -60,12 +60,18 @@ export default function Dashboard() {
   const [amount, setAmount] = useState();
   const [challengeName, setChallengeName] = useState();
 
+  /**
+   * Opens the end of challenge modal window.
+   *
+   */
   const handleClickOpen = () => {
-    console.log(winnerReps)
-    console.log(loserReps)
     setOpen(true);
   };
 
+  /**
+   * Closes the end of challenge modal window.
+   *
+   */
   const handleClose = () => {
     setOpen(false);
   };
@@ -100,7 +106,10 @@ export default function Dashboard() {
     series: [graphMoney]
   }
 
-
+  /**
+   * Gets user stats in order to be displayed on the dashboard cards
+   *
+   */
   const getStats = () => {
     if (currentUser) {
       db.collection("USERS").doc(uid).collection('FRIENDS').get().then(snap => {
@@ -123,6 +132,12 @@ export default function Dashboard() {
     }
   }
 
+  /**
+   * Verifies if the user on going challenges are complited.
+   * It updates the db information if a challenge is complete and
+   * triggers the display of the end of challenge screen.
+   *
+   */
   const isChallengeComplete = () => {
     let query = db.collection("CHALLENGES")
     let user_reps = 0
@@ -139,9 +154,6 @@ export default function Dashboard() {
           
           const today = new Date()
           let user_win;
-          // console.log(today.getDate())
-          // console.log(endDate.toDate())
-          // console.log(doc.id)
 
           if (today > endDate.toDate()) {
             setChallengeName(doc.data().challengeName)
@@ -156,13 +168,8 @@ export default function Dashboard() {
                     friend_reps += docu.data().repetitions
                     setFriendReps(friend_reps)
                   }
-
-                  console.log(user_reps)
-                  console.log(friend_reps)
-                  console.log(isLoggedInUser)
                   if(isLoggedInUser){
                     if (user_reps > friend_reps) {
-                      console.log("I am the owner and I won")
                       user_win = participant[0]
                       setWinner(participant[0])
                       setWinnerReps(user_reps)
@@ -170,7 +177,6 @@ export default function Dashboard() {
                       setLoserReps(friend_reps)
                       setUserWon(true)
                     } else {
-                      console.log("I am the owner and I lost")
                       user_win = participant[1]
                       setWinner(participant[1])
                       setWinnerReps(friend_reps)
@@ -180,7 +186,6 @@ export default function Dashboard() {
                     }
                   }else {
                     if (user_reps > friend_reps) {
-                      console.log("I am not the owner and I won")
                       user_win = participant[1]
                       setWinner(participant[1])
                       setWinnerReps(user_reps)
@@ -188,7 +193,6 @@ export default function Dashboard() {
                       setLoserReps(friend_reps)
                       setUserWon(true)
                     } else {
-                      console.log("I am not the owner and I lost")
                       user_win = participant[0]
                       setWinner(participant[0])
                       setWinnerReps(friend_reps)
@@ -219,6 +223,10 @@ export default function Dashboard() {
       });
   }
 
+  /**
+   * Triggered on DOM component render.
+   *
+   */
   useEffect(() => {
     isChallengeComplete();
     getStats();

@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+/**
+   * Sets the copyright at the bottom of the form
+   */
 function Copyright() {
   const classes = useStyles();
   return (
@@ -71,6 +74,11 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false)
   const history = useHistory()
   
+  /**
+   * Sends an email to the user in order to retreive their passowrd.
+   *
+   * @param {Object} e The event triggered.
+   */
   async function handleSubmit(e) {
     e.preventDefault()
 

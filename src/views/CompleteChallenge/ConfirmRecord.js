@@ -40,11 +40,14 @@ export default function ConfirmRecord({ challengeId, data, navigation }) {
                     repetitions: reps,
                 }}
 
+                /**
+                 * Writes the logs data in the database
+                 * 
+                 * @param {string} values Different fields of the form
+                 */
                 onSubmit={(values, { setSubmitting }) => {
                     const { challengeName, logdate, repetitions } = values;
-                    console.log(logdate.toString())
                     const day = code + '-' + logdate.getFullYear() + '-' + (logdate.getMonth() + 1) + '-' + logdate.getDate();
-                    console.log(id)
                     db.collection("CHALLENGES")
                         .doc(id)
                         .collection("LOGS")

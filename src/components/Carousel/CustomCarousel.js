@@ -23,7 +23,6 @@ export default function CustomCarousel(props) {
                         data: doc.data()
                     }
                     setChallenges(userChallenges => [...userChallenges, document]);
-                    console.log(document)
                 });
                 
             })
